@@ -95,7 +95,21 @@ class NeuroMCPService:
             self._loaded = True
 
     def load(self) -> None:
-        # For simplicity and correctness we always rebuild from source if roots exist.
+        """Load from persisted index if available, otherwise full refresh."""
+        db_path = self.data_dir / "documents.sqlite3"
+        brain_ok = self.brain_embedder.load()
+        code_ok = self.code_embedder.load()
+        if brain_ok and code_ok and db_path.exists():
+            # Restore notes metadata from brain documents
+            brain_docs = self.repo.all_documents(DocKind.BRAIN)
+            if brain_docs:
+                from .notes import _rebuild_notes_from_docs
+                self.notes = _rebuild_notes_from_docs(brain_docs)
+                self._loaded = True
+                logger.info("Loaded from persisted index (%d brain, %d code docs)",
+                            len(brain_docs), len(self.repo.all_documents(DocKind.CODE)))
+                return
+        # Fallback: full refresh from filesystem
         self.refresh()
 
     def _ensure_loaded(self) -> None:

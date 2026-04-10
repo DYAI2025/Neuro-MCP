@@ -181,3 +181,23 @@ def scan_brain_documents(settings: Settings) -> tuple[list[DocumentRecord], dict
             )
 
     return documents, notes
+
+
+def _rebuild_notes_from_docs(brain_docs: list[DocumentRecord]) -> dict[str, NoteMetadata]:
+    """Reconstruct NoteMetadata dict from persisted DocumentRecords (fast warm-start)."""
+    notes: dict[str, NoteMetadata] = {}
+    for doc in brain_docs:
+        owner = doc.owner_id
+        if owner in notes:
+            continue
+        meta = doc.metadata
+        if not meta or "note_id" not in meta:
+            continue
+        try:
+            notes[owner] = NoteMetadata(**{
+                k: v for k, v in meta.items()
+                if k in NoteMetadata.model_fields
+            })
+        except Exception:
+            continue
+    return notes

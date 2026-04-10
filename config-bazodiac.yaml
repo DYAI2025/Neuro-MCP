@@ -1,8 +1,7 @@
 brain_root: /Users/benjaminpoersch/Obsidian_new/second-brain-starter-kit
-code_root: /Users/benjaminpoersch/Projects/codebase
-data_dir: /Users/benjaminpoersch/Obsidian_new/neuro_mcp/neuro_mcp_server_clean/.neuro_mcp
+code_root: /Users/benjaminpoersch/Projects/codebase/Bazodiac-WebApp/Astro-Noctum
+data_dir: /Users/benjaminpoersch/Obsidian_new/neuro_mcp/neuro_mcp_server_clean/.neuro_mcp_bazodiac
 
-# Exclude heavy/irrelevant directories
 exclude_dirs:
   - .git
   - .venv
@@ -16,12 +15,8 @@ exclude_dirs:
   - .turbo
   - coverage
   - .svelte-kit
+  - archive
   - done
-  - "waillist effekt"
-  - extracted-effects
-  - Sprints
-  - Scrum_Master
-  - doku
 
 # Search weights (sum to 1.0)
 semantic_weight: 0.55
@@ -29,12 +24,12 @@ lexical_weight: 0.20
 freshness_weight: 0.15
 precision_weight: 0.10
 
-# Hybrid embeddings (TF-IDF + optional sentence-transformers)
+# Hybrid embeddings
 semantic_model: all-MiniLM-L6-v2
 semantic_model_weight: 0.65
 tfidf_model_weight: 0.35
 
 # Server
-mcp_server_name: NeuroMCP
+mcp_server_name: NeuroMCP-Bazodiac
 bind_host: 127.0.0.1
-bind_port: 8765
+bind_port: 8766
