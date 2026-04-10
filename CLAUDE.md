@@ -112,3 +112,24 @@ neuro-mcp --config config.example.yaml serve --transport streamable-http --host 
 `Settings` (`config.py`) can be loaded from YAML or JSON via `Settings.from_file()`. The two required fields are `brain_root` and `code_root`. Data (SQLite + joblib index files) is stored in `data_dir` (default: `.neuro_mcp/`).
 
 See `config.example.yaml` for all available knobs.
+
+## Project Overview
+
+NeuroMCP is a production-oriented MCP server and local knowledge engine that keeps semantic notes useful over time by connecting them to the codebase they describe. It uses neuro-inspired concepts (freshness decay, reconsolidation, synaptic tagging, phasic/tonic modes) to maintain knowledge integrity.
+
+### Current State
+
+The core system is stable (v1): dual brain/code indexing, freshness model, reconciliation, MCP tools, HTTP/stdio transport. Development is in the **Specification phase** for v2 extensions: Reconsolidation Review Transactions, Precision-Weighted Evidence Graph, STC Promotion Queue, and Claim Engine.
+
+## SDLC Structure
+
+This project uses the [AI SDLC Scaffold](https://github.com/pangon/ai-sdlc-scaffold) for AI-first development:
+
+- `1-spec/` — WHAT and WHY: goals, requirements, constraints, user stories
+- `2-design/` — HOW: architecture, data model, API design
+- `3-code/` — BUILD: component directories, tasks, source code
+- `4-deploy/` — SHIP: runbooks, deployment procedures
+- `decisions/` — Decision records (DEC-*.md + history)
+- `.claude/skills/SDLC-*/` — Claude skills for each SDLC phase
+
+Skills: `/SDLC-init`, `/SDLC-elicit`, `/SDLC-design`, `/SDLC-decompose`, `/SDLC-implementation-plan`, `/SDLC-execute-next-task`, `/SDLC-fix`, `/SDLC-status`
