@@ -237,7 +237,8 @@ class NeuroMCPService:
         if not dry_run and report.items:
             from .gc import execute_gc_actions
             backup_dir = self.data_dir / "gc_backups"
-            execute_gc_actions(report.items, backup_dir=backup_dir)
+            results = execute_gc_actions(report.items, backup_dir=backup_dir)
+            report.execution_results = results
         return report
 
     def digest(self) -> DigestReport:

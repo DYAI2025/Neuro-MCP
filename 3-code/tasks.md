@@ -35,12 +35,12 @@
 
 | ID | Task | Priority | Status | Req | Dependencies | Updated | Notes |
 |----|------|----------|--------|-----|--------------|---------|-------|
-| TASK-decay-defaults-shared-map | Extract DEFAULT_DECAY_BY_TYPE into shared location, use in get_note and scan_brain | P1 | Todo | [REQ-F-decay-defaults-consistency](../1-spec/requirements/REQ-F-decay-defaults-consistency.md) | - | 2026-04-10 | freshness.py already has TYPE_DEFAULT_DECAY |
-| TASK-decay-defaults-tests | Test get_note uses type-based decay (inbox=7d, bug=14d, arch=90d, adr=immutable) | P1 | Todo | [REQ-F-decay-defaults-consistency](../1-spec/requirements/REQ-F-decay-defaults-consistency.md) | TASK-decay-defaults-shared-map | 2026-04-10 | |
-| TASK-gc-frontmatter-writer | gc --apply calls execute_gc_actions to write status:archived to frontmatter | P1 | Todo | [REQ-F-gc-apply-mutations](../1-spec/requirements/REQ-F-gc-apply-mutations.md) | - | 2026-04-10 | execute_gc_actions exists in gc.py but is not wired to service.gc() |
-| TASK-gc-mutation-logging | Log each GC mutation with timestamp, reason, previous status | P1 | Todo | [REQ-F-gc-apply-mutations](../1-spec/requirements/REQ-F-gc-apply-mutations.md) | TASK-gc-frontmatter-writer | 2026-04-10 | |
-| TASK-gc-idempotency-tests | Test gc --apply idempotent, dry-run unchanged, mutations logged | P1 | Todo | [REQ-F-gc-apply-mutations](../1-spec/requirements/REQ-F-gc-apply-mutations.md) | TASK-gc-mutation-logging | 2026-04-10 | |
-| TASK-labile-linked-paths-check | In refresh(), check linked_paths existence when auto_mark_labile=true | P1 | Todo | [REQ-F-labile-auto-mark](../1-spec/requirements/REQ-F-labile-auto-mark.md) | - | 2026-04-10 | Needs auto_mark_labile field in Settings |
+| TASK-decay-defaults-shared-map | Extract DEFAULT_DECAY_BY_TYPE into shared location, use in get_note and scan_brain | P1 | Done | [REQ-F-decay-defaults-consistency](../1-spec/requirements/REQ-F-decay-defaults-consistency.md) | - | 2026-04-10 | freshness.py already has TYPE_DEFAULT_DECAY |
+| TASK-decay-defaults-tests | Test get_note uses type-based decay (inbox=7d, bug=14d, arch=90d, adr=immutable) | P1 | Done | [REQ-F-decay-defaults-consistency](../1-spec/requirements/REQ-F-decay-defaults-consistency.md) | TASK-decay-defaults-shared-map | 2026-04-10 | |
+| TASK-gc-frontmatter-writer | gc --apply calls execute_gc_actions to write status:archived to frontmatter | P1 | Done | [REQ-F-gc-apply-mutations](../1-spec/requirements/REQ-F-gc-apply-mutations.md) | - | 2026-04-10 | execute_gc_actions exists in gc.py but is not wired to service.gc() |
+| TASK-gc-mutation-logging | Log each GC mutation with timestamp, reason, previous status | P1 | Done | [REQ-F-gc-apply-mutations](../1-spec/requirements/REQ-F-gc-apply-mutations.md) | TASK-gc-frontmatter-writer | 2026-04-10 | |
+| TASK-gc-idempotency-tests | Test gc --apply idempotent, dry-run unchanged, mutations logged | P1 | Done | [REQ-F-gc-apply-mutations](../1-spec/requirements/REQ-F-gc-apply-mutations.md) | TASK-gc-mutation-logging | 2026-04-10 | |
+| TASK-labile-linked-paths-check | In refresh(), check linked_paths existence when auto_mark_labile=true | P1 | In Progress | [REQ-F-labile-auto-mark](../1-spec/requirements/REQ-F-labile-auto-mark.md) | - | 2026-04-10 | Needs auto_mark_labile field in Settings |
 | TASK-labile-frontmatter-write | Write status:labile + reason to frontmatter via writer.py | P1 | Todo | [REQ-F-labile-auto-mark](../1-spec/requirements/REQ-F-labile-auto-mark.md) | TASK-labile-linked-paths-check | 2026-04-10 | |
 | TASK-labile-tests | Test: missing file→labile, existing→no change, disabled→no change | P1 | Todo | [REQ-F-labile-auto-mark](../1-spec/requirements/REQ-F-labile-auto-mark.md) | TASK-labile-frontmatter-write | 2026-04-10 | |
 | TASK-stc-refresh-integration | Call synaptic_tagging check from service.refresh() after brain scan | P1 | Todo | [REQ-F-stc-promotion-queue](../1-spec/requirements/REQ-F-stc-promotion-queue.md) | - | 2026-04-10 | synaptic_tagging.py exists but not called from refresh() |
@@ -87,7 +87,7 @@
 
 | ID | Task | Priority | Status | Req | Dependencies | Updated | Notes |
 |----|------|----------|--------|-----|--------------|---------|-------|
-| TASK-phase-1-manual-testing | Create 4-deploy/runbooks/phase-1-foundation.md with test scenarios | P0 | Todo | - | TASK-gc-idempotency-tests, TASK-decay-defaults-tests | 2026-04-10 | |
+| TASK-phase-1-manual-testing | Create 4-deploy/runbooks/phase-1-foundation.md with test scenarios | P0 | Done | - | TASK-gc-idempotency-tests, TASK-decay-defaults-tests | 2026-04-10 | |
 | TASK-phase-2-manual-testing | Update runbook with labile + STC test scenarios | P0 | Todo | - | TASK-labile-tests, TASK-stc-promotion-tests | 2026-04-10 | |
 | TASK-phase-3-manual-testing | Update runbook with watcher pipeline scenarios | P0 | Todo | - | TASK-watcher-pipeline-tests | 2026-04-10 | |
 | TASK-phase-4-manual-testing | Update runbook with reconsolidation + MCP tool scenarios | P0 | Todo | - | TASK-recon-mcp-tools | 2026-04-10 | |

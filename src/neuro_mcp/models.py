@@ -122,6 +122,7 @@ class GarbageCollectionReport(BaseModel):
     stale_count: int = 0
     missing_sources_count: int = 0
     archived_candidates: int = 0
+    execution_results: list[dict[str, Any]] = Field(default_factory=list)
 
 
 class DigestReport(BaseModel):

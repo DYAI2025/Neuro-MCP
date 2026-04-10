@@ -1,9 +1,12 @@
 from __future__ import annotations
 
+import logging
 from pathlib import Path
 
 from .freshness import compute_freshness
 from .models import GarbageCollectionItem, GarbageCollectionReport, Mode, NoteStatus
+
+logger = logging.getLogger(__name__)
 
 
 def build_gc_report(notes: list[dict], mode: Mode, dry_run: bool) -> GarbageCollectionReport:
@@ -14,7 +17,7 @@ def build_gc_report(notes: list[dict], mode: Mode, dry_run: bool) -> GarbageColl
 
     for note in notes:
         note_type = note.get("note_type", "note")
-        decay_class = note.get("decay_class", "30d")
+        decay_class = note.get("decay_class") or None
         last_verified = note.get("last_verified")
         source_files_exist = bool(note.get("source_files_exist", True))
         status_before_raw = note.get("status", "active")
@@ -100,6 +103,10 @@ def execute_gc_actions(
         if item.status_after == "archived":
             meta["archived_at"] = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
         path.write_text(dump_markdown_note(meta, body), encoding="utf-8")
+        logger.info(
+            "GC mutation: %s | %s → %s | reason: %s | path: %s",
+            item.note_id, item.status_before, item.status_after, item.reason, item.path,
+        )
         results.append({"note_id": item.note_id, "executed": True, "status_after": item.status_after})
 
     return results
