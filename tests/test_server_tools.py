@@ -102,7 +102,7 @@ def test_mcp_registers_expected_tools_and_basic_invocation(tmp_path: Path):
     assert "source_of_truth" in reconcile
 
     digest = app.tools["freshness_digest"]()
-    assert "summary" in digest
+    assert "total_notes" in digest
 
     gc_result = app.tools["run_garbage_collection"](dry_run=True)
     assert gc_result["dry_run"] is True
