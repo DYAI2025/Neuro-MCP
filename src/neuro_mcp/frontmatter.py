@@ -1,13 +1,34 @@
 from __future__ import annotations
 
 import re
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 import yaml
 
+try:
+    from datetime import UTC
+except ImportError:
+    UTC = timezone.utc
+
 
 FRONTMATTER_RE = re.compile(r"^---\r?\n(.*?)\r?\n---\r?\n(.*)$", re.DOTALL)
+
+
+ENRICHMENT_VERSION = "v1"
+
+
+def stamp_enrichment_marker(metadata: dict[str, Any], now: datetime | None = None) -> None:
+    """Mark metadata as enriched by NeuroMCP.
+
+    Sets `_neuro_mcp_enriched` to the current enrichment schema version and
+    `_neuro_mcp_last` to an ISO-8601 UTC timestamp. Mutates the dict in place.
+    Existing fields are preserved.
+    """
+    when = now if now is not None else datetime.now(UTC)
+    metadata["_neuro_mcp_enriched"] = ENRICHMENT_VERSION
+    metadata["_neuro_mcp_last"] = when.strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def parse_markdown_note(path: str | Path) -> tuple[dict[str, Any], str]:
