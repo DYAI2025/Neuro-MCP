@@ -1,0 +1,53 @@
+{
+  "collapse-filter": false,
+  "search": "",
+  "showTags": true,
+  "showAttachments": false,
+  "hideUnresolved": false,
+  "showOrphans": true,
+  "collapse-color-groups": false,
+  "colorGroups": [
+    {
+      "query": "path:1-spec/goals",
+      "color": { "a": 1, "rgb": 52224 }
+    },
+    {
+      "query": "path:1-spec/requirements",
+      "color": { "a": 1, "rgb": 3381555 }
+    },
+    {
+      "query": "path:1-spec/constraints",
+      "color": { "a": 1, "rgb": 16750848 }
+    },
+    {
+      "query": "path:2-design",
+      "color": { "a": 1, "rgb": 8388863 }
+    },
+    {
+      "query": "path:decisions",
+      "color": { "a": 1, "rgb": 16711680 }
+    },
+    {
+      "query": "path:3-code",
+      "color": { "a": 1, "rgb": 65535 }
+    },
+    {
+      "query": "path:src",
+      "color": { "a": 1, "rgb": 8421504 }
+    },
+    {
+      "query": "path:docs",
+      "color": { "a": 1, "rgb": 16776960 }
+    }
+  ],
+  "collapse-display": false,
+  "showArrow": true,
+  "textFadeMultiplier": -1.5,
+  "nodeSizeMultiplier": 1.2,
+  "lineSizeMultiplier": 1,
+  "collapse-forces": true,
+  "centerStrength": 0.5,
+  "repelStrength": 10,
+  "linkStrength": 1,
+  "linkDistance": 200
+}

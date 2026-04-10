@@ -4,26 +4,28 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Persistent Memory (NeuroMCP — use this first)
 
-Before exploring files or asking questions, recall stored context from the brain vault:
+This repo uses NeuroMCP on itself (self-referential). The repo's own SDLC artifacts (goals, requirements, ADRs, architecture docs) are the brain; its Python source is the code.
 
 ```bash
-# Recall project context
-uv run neuro-mcp --config config-bazodiac.yaml search-brain "NeuroMCP"
+# Self-referential: search this repo's own specs, ADRs, plans as brain notes
+uv run neuro-mcp --config config-self.yaml search-brain "<topic>"
 
-# Recall any topic
-uv run neuro-mcp --config config-bazodiac.yaml search-brain "<topic>"
+# Search this repo's own Python source as code
+uv run neuro-mcp --config config-self.yaml search-code "<topic>"
 
-# Cross-check notes vs code
-uv run neuro-mcp --config config-bazodiac.yaml reconcile "<topic>"
+# Cross-check: do the specs agree with the implementation?
+uv run neuro-mcp --config config-self.yaml reconcile "<topic>"
+
+# Full status (365 notes, phasic mode)
+uv run neuro-mcp --config config-self.yaml status
+
+# Re-index after changes
+uv run neuro-mcp --config config-self.yaml index
 ```
 
-The canonical project note is at:
-`/Users/benjaminpoersch/Obsidian_new/second-brain-starter-kit/04-projekte/neuro-mcp-server.md`
+Self-server runs on port 8767: `uv run neuro-mcp --config config-self.yaml serve --transport streamable-http --port 8767`
 
-After any significant change, update that note and re-index:
-```bash
-uv run neuro-mcp --config config-bazodiac.yaml index
-```
+External brain vault (Obsidian) is still available via config-bazodiac.yaml (port 8766).
 
 ## Installation
 
