@@ -102,18 +102,32 @@ def extract_dependencies(file_name: str, text: str) -> set[str]:
             if dep:
                 deps.add(dep)
     elif file_name == "pyproject.toml":
-        for raw_line in text.splitlines():
-            line = raw_line.strip()
-            if '"' in line and ("dependencies" in raw_line.lower() or raw_line.strip().startswith('"')):
-                # conservative TOML dependency extraction
-                parts = [part.strip().strip('",') for part in line.split('"') if part.strip()]
-                for part in parts:
-                    if any(char.isalpha() for char in part) and not part.startswith("["):
-                        dep = part.split(">=")[0].split("<=")[0].split("==")[0].split(";")[0].strip()
-                        if dep and " " not in dep:
-                            deps.add(dep)
-            if raw_line.strip().startswith("name ="):
-                continue
+        import tomllib
+        import re as _re
+        _dep_split = _re.compile(r"[><=!~;\[ ]")
+        try:
+            data = tomllib.loads(text)
+        except Exception:
+            return deps
+
+        # PEP 517 / pyproject style
+        project = data.get("project") or {}
+        dep_lists: list = list(project.get("dependencies") or [])
+        for extra_deps in (project.get("optional-dependencies") or {}).values():
+            if isinstance(extra_deps, list):
+                dep_lists.extend(extra_deps)
+
+        # Poetry style
+        poetry = (data.get("tool") or {}).get("poetry") or {}
+        for section in ("dependencies", "dev-dependencies"):
+            section_val = poetry.get(section)
+            if isinstance(section_val, dict):
+                dep_lists.extend(section_val.keys())
+
+        for raw in dep_lists:
+            name = _dep_split.split(str(raw))[0].strip()
+            if name and name.lower() not in {"python", ""}:
+                deps.add(name)
     elif file_name == "cargo.toml":
         inside = False
         for raw_line in text.splitlines():
