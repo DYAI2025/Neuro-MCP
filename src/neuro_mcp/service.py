@@ -4,6 +4,7 @@ import logging
 import os
 import stat
 import threading
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -19,7 +20,15 @@ from .embeddings import TfidfEmbedder
 from .gc import build_gc_report
 from .git_utils import changed_files_since, detect_mode
 from .hybrid_embeddings import HybridEmbedder
-from .models import DigestReport, DocKind, Mode, NoteStatus, ReconcileReport, SearchResult
+from .models import (
+    DigestReport,
+    DocKind,
+    Mode,
+    NoteStatus,
+    PipelineStageResult,
+    ReconcileReport,
+    SearchResult,
+)
 from .notes import scan_brain_documents
 from .reconcile import reconcile_results
 from .search import dedupe_note_results, rank_documents, rank_documents_hybrid
@@ -54,6 +63,7 @@ class NeuroMCPService:
         self.notes = {}
         self.manifests: dict[str, set[str]] = {}
         self._recent_promotions: list[dict] = []
+        self._pipeline_stages: list[PipelineStageResult] = []
         self._loaded = False
         self._refresh_lock = threading.Lock()
         self._check_data_dir_permissions()
@@ -151,20 +161,29 @@ class NeuroMCPService:
             # Pipeline stages — order matters: STC first (may promote inbox → 30d),
             # then labile (marks status based on linked_paths), then reconcile (read-only).
             # Each stage is isolated so one failure does not block others.
-            if self.settings.enable_stc:
-                try:
-                    self._run_stc_promotions()
-                except Exception:
-                    logger.exception("STC promotion stage failed")
-            try:
-                self._check_labile_linked_paths()
-            except Exception:
-                logger.exception("Labile marking stage failed")
-            if self.settings.enable_auto_reconcile:
-                try:
-                    self._run_auto_reconcile()
-                except Exception:
-                    logger.exception("Auto-reconcile stage failed")
+            self._pipeline_stages = []
+            self._run_pipeline_stage("stc", self._run_stc_promotions,
+                                     enabled=self.settings.enable_stc)
+            self._run_pipeline_stage("labile", self._check_labile_linked_paths,
+                                     enabled=True)
+            self._run_pipeline_stage("auto_reconcile", self._run_auto_reconcile,
+                                     enabled=self.settings.enable_auto_reconcile)
+
+    def _run_pipeline_stage(self, name: str, fn, enabled: bool) -> None:
+        """Run a pipeline stage, record metrics, isolate errors."""
+        if not enabled:
+            return
+        start = time.perf_counter()
+        result = PipelineStageResult(stage=name)
+        try:
+            out = fn()
+            if isinstance(out, list):
+                result.items_processed = len(out)
+        except Exception:
+            logger.exception("Pipeline stage %r failed", name)
+            result.error_count = 1
+        result.duration_ms = (time.perf_counter() - start) * 1000
+        self._pipeline_stages.append(result)
 
     def _run_auto_reconcile(self) -> None:
         """Trigger reconcile on notes whose linked_paths overlap with recently changed files."""
@@ -324,6 +343,7 @@ class NeuroMCPService:
             recent_promotions=len(self._recent_promotions),
             top_risks=risks[:10],
             next_actions=next_actions,
+            pipeline_stages=list(self._pipeline_stages),
         )
 
     def get_note(self, relative_path: str) -> dict:
