@@ -89,7 +89,8 @@ def test_mcp_registers_expected_tools_and_basic_invocation(tmp_path: Path):
         "run_garbage_collection",
         "check_interference",
     }
-    assert expected_tools.issubset(app.tools)
+    assert set(app.tools) == expected_tools
+    assert len(app.tools) == len(expected_tools)
 
     search_result = app.tools["search_brain"]("react", top_k=3)
     assert search_result["query"] == "react"
