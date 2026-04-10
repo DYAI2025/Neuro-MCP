@@ -8,7 +8,23 @@ This phase contains the **implementation**. Focus on clean, tested, maintainable
 
 ## Components
 
-<!-- Add an entry for each component/codebase -->
+### Core Engine
+
+- **Directory**: [`core-engine/`](core-engine/)
+- **Technology**: Python 3.11+, SQLite, TF-IDF, sentence-transformers
+- **Responsibility**: Indexing, search, freshness, reconciliation, reconsolidation, STC, GC, interference
+
+### MCP Server
+
+- **Directory**: [`mcp-server/`](mcp-server/)
+- **Technology**: Python, FastMCP, Starlette, uvicorn
+- **Responsibility**: MCP protocol layer, HTTP transport, auth, tool exposure
+
+### Visual Test Lab
+
+- **Directory**: [`visual-test-lab/`](visual-test-lab/)
+- **Technology**: React 18, Vite, TypeScript
+- **Responsibility**: Deterministic GUI for testing neuro-MCP knowledge behaviors
 
 ---
 
