@@ -18,6 +18,8 @@ A local knowledge engine that keeps markdown notes useful over time by connectin
 - [Use Cases & Possibilities](#use-cases--possibilities)
 - [Claude Desktop Integration](#claude-desktop-integration)
 - [Multi-Project Setup](#multi-project-setup)
+- [AI Agent Integration (Three Layers)](#ai-agent-integration-three-layers)
+- [Setup for New Users](#setup-for-new-users)
 - [Troubleshooting](#troubleshooting)
 
 ---
@@ -558,11 +560,11 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
       "command": "uv",
       "args": [
         "--directory",
-        "/Users/benjaminpoersch/Obsidian_new/neuro_mcp/neuro_mcp_server_clean",
+        "/path/to/neuro_mcp_server_clean",
         "run",
         "neuro-mcp",
         "--config",
-        "/Users/benjaminpoersch/Obsidian_new/neuro_mcp/neuro_mcp_server_clean/config.yaml",
+        "/path/to/neuro_mcp_server_clean/config.yaml",
         "serve",
         "--transport",
         "stdio"
@@ -571,6 +573,8 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
   }
 }
 ```
+
+Replace `/path/to/neuro_mcp_server_clean` with the actual path where you cloned the repo.
 
 ### HTTP (already running)
 
@@ -625,7 +629,261 @@ Each has its own `data_dir`, so the SQLite databases and joblib indices don't in
 
 ---
 
-## Troubleshooting
+## AI Agent Integration (Three Layers)
+
+NeuroMCP is designed to serve as **persistent memory for AI agents**. The recommended setup uses three layers so that every model and agent — Claude Code, Claude Desktop, IDE extensions, custom agents — can recall project knowledge.
+
+### Layer 1: CLAUDE.md (per-project)
+
+Every project that uses NeuroMCP should include recall instructions in its `CLAUDE.md`. This ensures any Claude Code session in that repo automatically knows to query the brain vault.
+
+Add this block to the project's `CLAUDE.md`:
+
+```markdown
+## Persistent Memory (NeuroMCP)
+
+Before exploring files, recall stored context:
+
+\`\`\`bash
+neuro-mcp --config /path/to/config.yaml search-brain "<topic>"
+neuro-mcp --config /path/to/config.yaml reconcile "<topic>"
+\`\`\`
+
+After significant changes, update the brain note and re-index:
+\`\`\`bash
+neuro-mcp --config /path/to/config.yaml index
+\`\`\`
+```
+
+### Layer 2: Global instructions (all sessions)
+
+For Claude Code, add NeuroMCP instructions to `~/.claude/CLAUDE.md` so **every session** — regardless of project — can recall context:
+
+```markdown
+## Persistent Memory via NeuroMCP
+
+At session start, recall context from the brain vault:
+
+\`\`\`bash
+neuro-mcp --config /path/to/config.yaml search-brain "<project-name or topic>"
+\`\`\`
+
+Brain notes live in: /path/to/your/brain-vault/
+Project notes folder: 04-projekte/ (or your preferred subfolder)
+
+Store new knowledge as a brain note with frontmatter:
+- decay_class: 30d
+- last_verified: <today>
+- status: active
+
+Then re-index: neuro-mcp --config /path/to/config.yaml index
+```
+
+For other AI platforms, add equivalent instructions to their respective config files:
+- **Cursor**: `.cursor/rules/` or `.cursorrules`
+- **Copilot**: `.github/copilot-instructions.md`
+- **Windsurf**: `.windsurfrules`
+- **Custom agents**: include the recall commands in the system prompt
+
+### Layer 3: MCP server (direct tool access)
+
+When the server is running, any MCP-capable client has direct tool access — no shell commands needed. The AI calls `search_brain`, `reconcile_brain_with_code`, or `brain_ingest_note` as native tools.
+
+**Claude Desktop** — add to `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "neuro-mcp": {
+      "command": "uv",
+      "args": [
+        "--directory", "/path/to/neuro_mcp_server_clean",
+        "run", "neuro-mcp",
+        "--config", "/path/to/config.yaml",
+        "serve", "--transport", "stdio"
+      ]
+    }
+  }
+}
+```
+
+**Claude Code** — add to `.claude/settings.json` or project MCP config:
+
+```json
+{
+  "mcpServers": {
+    "neuro-mcp": {
+      "url": "http://127.0.0.1:8766/mcp"
+    }
+  }
+}
+```
+
+**Any MCP client** — connect via HTTP:
+
+```
+POST http://127.0.0.1:8766/mcp
+```
+
+### How the layers work together
+
+```
+Layer 3 (MCP tools)     ← AI calls search_brain / reconcile directly
+    ↕
+Layer 2 (global config)  ← every session knows to use NeuroMCP
+    ↕
+Layer 1 (project CLAUDE.md) ← project-specific recall instructions
+    ↕
+Brain Vault (Obsidian)   ← persistent knowledge store
+    ↕
+Code Index               ← source of truth for code state
+```
+
+- **Layer 1** ensures project-specific context is recalled
+- **Layer 2** ensures the habit carries across all projects
+- **Layer 3** gives the AI native tool access (richer than CLI)
+
+When all three layers are active, an AI agent joining a session will:
+1. Read `CLAUDE.md` → knows to query NeuroMCP
+2. Call `search_brain("<project>")` → gets architecture, decisions, bugs, context
+3. Call `reconcile("<topic>")` → knows where notes and code disagree
+4. After making changes → calls `brain_ingest_note()` to persist findings
+
+### Writing brain notes for agents
+
+Brain notes that work well for AI recall follow this pattern:
+
+```yaml
+---
+title: My Project
+tags: [project, python, api]
+decay_class: 30d
+last_verified: 2026-04-10
+status: active
+---
+```
+
+The body should include:
+- **Location** (repo path, remote URL)
+- **Key commands** (build, test, start, deploy)
+- **Architecture** (components, data flow, key files)
+- **Current state** (recent decisions, known bugs, blockers)
+- **Integration points** (APIs, databases, external services)
+
+Keep it factual and concise — the agent uses this as working memory, not documentation.
+
+### Updating brain notes from AI sessions
+
+After a significant discovery or change, persist it:
+
+**Via MCP tool:**
+```json
+{
+  "relative_path": "04-projekte/my-project.md",
+  "title": "My Project",
+  "content": "Updated architecture notes...",
+  "note_type": "note",
+  "decay_class": "30d"
+}
+```
+
+**Via CLI:**
+```bash
+neuro-mcp --config config.yaml ingest 04-projekte/my-project.md \
+  --title "My Project" \
+  --content "Updated architecture notes..." \
+  --decay-class 30d
+```
+
+**Manually:** edit the markdown file in your vault, update `last_verified`, then:
+```bash
+neuro-mcp --config config.yaml index
+```
+
+---
+
+## Setup for New Users
+
+This section walks through setting up NeuroMCP from scratch on a new machine.
+
+### 1. Clone and install
+
+```bash
+git clone https://github.com/DYAI2025/Neuro-MCP.git
+cd Neuro-MCP
+
+# Full install (MCP server + semantic search)
+uv sync --extra mcp --extra semantic
+
+# Or minimal (CLI only, TF-IDF)
+uv sync
+```
+
+### 2. Create your config
+
+Copy the example and adjust paths:
+
+```bash
+cp config.example.yaml config.yaml
+```
+
+Edit `config.yaml`:
+
+```yaml
+brain_root: /path/to/your/obsidian-vault    # or any markdown folder
+code_root: /path/to/your/project            # the codebase to index
+data_dir: .neuro_mcp                        # index storage (auto-created)
+```
+
+### 3. Create your brain vault structure
+
+NeuroMCP works with any markdown folder. A recommended structure:
+
+```
+my-vault/
+  00-inbox/          # quick captures (decay: 7d)
+  04-projekte/       # project notes (decay: 30d)
+  10-architecture/   # architecture decisions (decay: 90d)
+  20-decisions/      # ADRs (decay: immutable)
+  50-bugs-fixes/     # bug reports (decay: 14d)
+```
+
+### 4. Index and verify
+
+```bash
+# Build the index
+neuro-mcp --config config.yaml index
+
+# Verify it works
+neuro-mcp --config config.yaml status
+neuro-mcp --config config.yaml search-brain "hello"
+```
+
+### 5. Start the server
+
+```bash
+# For Claude Desktop (stdio)
+neuro-mcp --config config.yaml serve --transport stdio
+
+# For HTTP clients
+neuro-mcp --config config.yaml serve --transport streamable-http
+```
+
+### 6. Connect your AI client
+
+Follow the [Claude Desktop Integration](#claude-desktop-integration) section above, or connect any MCP client to `http://127.0.0.1:8000/mcp`.
+
+### 7. Set up the three layers
+
+1. Add NeuroMCP recall instructions to your project's `CLAUDE.md` (Layer 1)
+2. Add NeuroMCP instructions to `~/.claude/CLAUDE.md` (Layer 2)
+3. Register the MCP server in your AI client config (Layer 3)
+
+Now every AI session — in any project — can recall and store persistent knowledge.
+
+---
+
+
 
 ### `ModuleNotFoundError: No module named 'uvicorn'`
 

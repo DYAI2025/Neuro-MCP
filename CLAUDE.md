@@ -2,6 +2,29 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Persistent Memory (NeuroMCP — use this first)
+
+Before exploring files or asking questions, recall stored context from the brain vault:
+
+```bash
+# Recall project context
+uv run neuro-mcp --config config-bazodiac.yaml search-brain "NeuroMCP"
+
+# Recall any topic
+uv run neuro-mcp --config config-bazodiac.yaml search-brain "<topic>"
+
+# Cross-check notes vs code
+uv run neuro-mcp --config config-bazodiac.yaml reconcile "<topic>"
+```
+
+The canonical project note is at:
+`/Users/benjaminpoersch/Obsidian_new/second-brain-starter-kit/04-projekte/neuro-mcp-server.md`
+
+After any significant change, update that note and re-index:
+```bash
+uv run neuro-mcp --config config-bazodiac.yaml index
+```
+
 ## Installation
 
 ```bash
