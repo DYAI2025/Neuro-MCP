@@ -69,6 +69,7 @@ class Settings(BaseModel):
     semantic_model_weight: float = 0.65
     tfidf_model_weight: float = 0.35
     semantic_cache_dir: str | None = None
+    auto_mark_labile: bool = False
     auto_watch: bool = True
     watch_debounce_seconds: float = 5.0
 

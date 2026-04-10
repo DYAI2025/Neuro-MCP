@@ -131,6 +131,8 @@ class DigestReport(BaseModel):
     stale_notes: int
     labile_notes: int
     missing_source_notes: int
+    promotion_candidates: int = 0
+    recent_promotions: int = 0
     top_risks: list[str] = Field(default_factory=list)
     next_actions: list[str] = Field(default_factory=list)
 

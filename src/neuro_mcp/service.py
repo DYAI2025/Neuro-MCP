@@ -17,13 +17,14 @@ from .codebase import scan_code_documents
 from .config import Settings
 from .embeddings import TfidfEmbedder
 from .gc import build_gc_report
-from .git_utils import detect_mode
+from .git_utils import changed_files_since, detect_mode
 from .hybrid_embeddings import HybridEmbedder
-from .models import DigestReport, DocKind, Mode, ReconcileReport, SearchResult
+from .models import DigestReport, DocKind, Mode, NoteStatus, ReconcileReport, SearchResult
 from .notes import scan_brain_documents
 from .reconcile import reconcile_results
 from .search import dedupe_note_results, rank_documents, rank_documents_hybrid
 from .storage import Repository
+from .synaptic_tagging import evaluate_promotions
 
 logger = logging.getLogger(__name__)
 
@@ -52,6 +53,7 @@ class NeuroMCPService:
         )
         self.notes = {}
         self.manifests: dict[str, set[str]] = {}
+        self._recent_promotions: list[dict] = []
         self._loaded = False
         self._refresh_lock = threading.Lock()
         self._check_data_dir_permissions()
@@ -77,6 +79,53 @@ class NeuroMCPService:
         except OSError:
             pass
 
+    def _check_labile_linked_paths(self) -> None:
+        """Mark notes labile when their linked_paths reference deleted files."""
+        if not self.settings.auto_mark_labile:
+            return
+        for note in self.notes.values():
+            if not note.linked_paths:
+                continue
+            missing = [p for p in note.linked_paths
+                       if not (self.settings.code_root / p).exists()]
+            if missing and note.status == NoteStatus.ACTIVE:
+                from .frontmatter import parse_markdown_note, dump_markdown_note
+                note_path = Path(note.path)
+                if not note_path.exists():
+                    continue
+                meta, body = parse_markdown_note(note_path)
+                meta["status"] = "labile"
+                meta["labile_reasons"] = [f"linked file deleted: {p}" for p in missing]
+                note_path.write_text(dump_markdown_note(meta, body), encoding="utf-8")
+                logger.info("Marked labile: %s (missing: %s)", note.path, missing)
+
+    def _run_stc_promotions(self) -> list[dict]:
+        """Evaluate and apply STC promotions for inbox notes."""
+        try:
+            changed = set(changed_files_since(self.settings.code_root))
+        except Exception:
+            changed = set()
+        if not changed:
+            return []
+        promotions = evaluate_promotions(
+            notes=self.notes,
+            changed_files=changed,
+            stc_window_hours=self.settings.stc_window_hours,
+        )
+        for promo in promotions:
+            note_path = Path(promo["path"])
+            if not note_path.exists():
+                continue
+            from .frontmatter import parse_markdown_note, dump_markdown_note
+            meta, body = parse_markdown_note(note_path)
+            meta["decay_class"] = promo["new_decay_class"]
+            note_path.write_text(dump_markdown_note(meta, body), encoding="utf-8")
+            logger.info("STC promoted: %s (%s -> %s): %s",
+                        promo["title"], promo["old_decay_class"],
+                        promo["new_decay_class"], promo["reason"])
+        self._recent_promotions = promotions
+        return promotions
+
     def refresh(self) -> None:
         with self._refresh_lock:
             brain_docs, notes = scan_brain_documents(self.settings)
@@ -92,6 +141,9 @@ class NeuroMCPService:
 
             self.notes = notes
             self.manifests = manifests
+
+            self._run_stc_promotions()
+            self._check_labile_linked_paths()
             self._loaded = True
 
     def load(self) -> None:
@@ -213,6 +265,12 @@ class NeuroMCPService:
         if self.current_mode() == Mode.TONIC:
             next_actions.append("Major code volatility detected: run full reconcile audit.")
 
+        # Count inbox notes eligible for STC promotion
+        promotion_candidates = sum(
+            1 for n in self.notes.values()
+            if n.note_type == "inbox" and n.decay_class == "7d"
+        )
+
         return DigestReport(
             generated_at=datetime.now(UTC).isoformat().replace("+00:00", "Z"),
             mode=self.current_mode(),
@@ -220,6 +278,8 @@ class NeuroMCPService:
             stale_notes=stale,
             labile_notes=labile,
             missing_source_notes=missing_sources,
+            promotion_candidates=promotion_candidates,
+            recent_promotions=len(self._recent_promotions),
             top_risks=risks[:10],
             next_actions=next_actions,
         )
