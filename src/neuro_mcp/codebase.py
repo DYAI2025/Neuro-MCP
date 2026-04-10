@@ -142,10 +142,26 @@ def extract_dependencies(file_name: str, text: str) -> set[str]:
                 if dep:
                     deps.add(dep)
     elif file_name == "go.mod":
+        in_require_block = False
         for raw_line in text.splitlines():
             line = raw_line.strip()
-            if line.startswith("require "):
-                dep = line.removeprefix("require ").split(" ")[0].strip()
+            # Enter multi-line require block: "require ("
+            if line.startswith("require") and "(" in line:
+                in_require_block = True
+                continue
+            # Exit multi-line require block
+            if in_require_block and line == ")":
+                in_require_block = False
+                continue
+            # Inside block: each non-comment line is "module/path vX.Y.Z [// indirect]"
+            if in_require_block and line and not line.startswith("//"):
+                dep = line.split()[0].strip()
                 if dep:
                     deps.add(dep)
+                continue
+            # Single-line require: "require module/path vX.Y.Z"
+            if line.startswith("require ") and "(" not in line:
+                parts = line.removeprefix("require ").split()
+                if parts:
+                    deps.add(parts[0].strip())
     return deps
