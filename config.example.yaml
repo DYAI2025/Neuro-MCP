@@ -22,6 +22,26 @@ auto_mark_labile: false
 auto_watch: true
 watch_debounce_seconds: 5.0
 
+# Auto-enrichment: folder → {type, decay_class} mapping.
+# Notes without frontmatter in these folders get type/decay_class set
+# automatically. Longest-prefix-match wins for nested paths.
+folder_type_map:
+  "00-inbox":
+    type: inbox
+    decay_class: 7d
+  "04-projekte":
+    type: note
+    decay_class: 30d
+  "10-architecture":
+    type: architecture
+    decay_class: 90d
+  "20-decisions":
+    type: adr
+    decay_class: immutable
+  "50-bugs-fixes":
+    type: bug
+    decay_class: 14d
+
 # Server
 mcp_server_name: NeuroMCP
 mcp_path: /mcp

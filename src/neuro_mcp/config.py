@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 from pydantic import BaseModel, Field, SecretStr, field_validator, model_validator
+
+DecayClass = Literal["immutable", "90d", "60d", "30d", "14d", "7d"]
 
 
 DEFAULT_EXTENSIONS = [
@@ -29,6 +31,11 @@ DEFAULT_EXTENSIONS = [
     ".sh",
     ".env.example",
 ]
+
+
+class FolderTypeRule(BaseModel):
+    type: str
+    decay_class: DecayClass = "30d"
 
 
 class Settings(BaseModel):
@@ -74,6 +81,7 @@ class Settings(BaseModel):
     watch_debounce_seconds: float = 5.0
     enable_stc: bool = True
     enable_auto_reconcile: bool = False
+    folder_type_map: dict[str, FolderTypeRule] = Field(default_factory=dict)
 
     @model_validator(mode="after")
     def _check_search_weights(self) -> "Settings":
@@ -93,6 +101,25 @@ class Settings(BaseModel):
     @classmethod
     def _expand(cls, value: Any) -> Path:
         return Path(value).expanduser().resolve()
+
+    def resolve_folder_type(self, relative_path: str | Path) -> FolderTypeRule | None:
+        """Find the FolderTypeRule whose prefix matches `relative_path`.
+
+        Matches by longest-prefix-wins. Path separators are normalized so
+        the same map works on POSIX and Windows. Returns None if no rule matches.
+        """
+        if not self.folder_type_map:
+            return None
+        normalized = str(relative_path).replace("\\", "/")
+        matches = [
+            (prefix, rule)
+            for prefix, rule in self.folder_type_map.items()
+            if normalized.startswith(prefix.rstrip("/") + "/") or normalized == prefix
+        ]
+        if not matches:
+            return None
+        matches.sort(key=lambda pair: len(pair[0]), reverse=True)
+        return matches[0][1]
 
     @classmethod
     def from_file(cls, path: str | Path) -> "Settings":
