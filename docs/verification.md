@@ -33,4 +33,4 @@ Validation focus for MCP conversation access to these 10 tools:
 
 ## Important caveat
 
-This container currently lacks core runtime/test dependencies and cannot download them due proxy restrictions, so pytest-based execution could not be completed here. The added test is ready to run in a fully provisioned environment.
+This container currently lacks core runtime/test dependencies and cannot download them due to proxy restrictions, so pytest-based execution could not be completed here. The added test is ready to run in a fully provisioned environment.
