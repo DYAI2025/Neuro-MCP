@@ -181,7 +181,12 @@ class NeuroMCPService:
     def gc(self, dry_run: bool = True):
         self._ensure_loaded()
         notes = [note.model_dump() for note in self.notes.values()]
-        return build_gc_report(notes, self.current_mode(), dry_run=dry_run)
+        report = build_gc_report(notes, self.current_mode(), dry_run=dry_run)
+        if not dry_run and report.items:
+            from .gc import execute_gc_actions
+            backup_dir = self.data_dir / "gc_backups"
+            execute_gc_actions(report.items, backup_dir=backup_dir)
+        return report
 
     def digest(self) -> DigestReport:
         self._ensure_loaded()
@@ -234,7 +239,7 @@ class NeuroMCPService:
         metadata_raw, body = parse_markdown_note(full_path)
         rel = Path(relative_path)
         note_type = _guess_note_type(rel, metadata_raw)
-        decay_class = str(metadata_raw.get("decay_class") or "30d")
+        decay_class = metadata_raw.get("decay_class") or None
         last_verified = _parse_datetime(metadata_raw.get("last_verified"))
         linked_paths = _coerce_list(metadata_raw.get("linked_paths") or metadata_raw.get("source_files"))
         source_files_exist = all(
