@@ -140,3 +140,6 @@ When an artifact (goal, user story, requirement) is no longer relevant:
 |------|----------|--------|---------|
 | [CON-redis-dependency](constraints/CON-redis-dependency.md) | Technical | Active | Redis required for persistent rate limiting |
 | [CON-no-breaking-changes](constraints/CON-no-breaking-changes.md) | Technical | Active | No breaking changes to existing API contracts |
+| [CON-no-auto-delete](constraints/CON-no-auto-delete.md) | Operational | Approved | No auto-deletion; content mutation requires explicit --apply |
+| [CON-offline-first](constraints/CON-offline-first.md) | Technical | Approved | TF-IDF default; no internet required for core functionality |
+| [CON-backwards-compatible](constraints/CON-backwards-compatible.md) | Technical | Approved | v2 must not break existing configs, CLI, or MCP signatures |
