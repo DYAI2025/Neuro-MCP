@@ -122,6 +122,12 @@ When an artifact (goal, user story, requirement) is no longer relevant:
 | [REQ-F-persistent-rate-limits](requirements/REQ-F-persistent-rate-limits.md) | Functional | Must-have | Draft | Persistent per-key rate limit counters |
 | [REQ-F-provenance-soulprint-weights](requirements/REQ-F-provenance-soulprint-weights.md) | Functional | Should-have | Draft | Soulprint weights in provenance |
 | [REQ-F-remove-null-deltas](requirements/REQ-F-remove-null-deltas.md) | Functional | Must-have | Draft | Remove or implement transit delta fields |
+| [REQ-F-reconsolidation-transactions](requirements/REQ-F-reconsolidation-transactions.md) | Functional | Must-have | Draft | Persistent reconsolidation transactions on contradiction detection |
+| [REQ-F-gc-apply-mutations](requirements/REQ-F-gc-apply-mutations.md) | Functional | Must-have | Draft | gc --apply mutates note frontmatter idempotently |
+| [REQ-F-stc-promotion-queue](requirements/REQ-F-stc-promotion-queue.md) | Functional | Must-have | Draft | STC-based promotion queue for inbox notes |
+| [REQ-F-labile-auto-mark](requirements/REQ-F-labile-auto-mark.md) | Functional | Must-have | Draft | Auto-mark notes labile when linked files are deleted |
+| [REQ-F-watcher-orchestration](requirements/REQ-F-watcher-orchestration.md) | Functional | Must-have | Draft | Full watcher orchestration pipeline |
+| [REQ-F-decay-defaults-consistency](requirements/REQ-F-decay-defaults-consistency.md) | Functional | Must-have | Draft | Consistent type-based decay defaults across get_note and indexer |
 
 ---
 
