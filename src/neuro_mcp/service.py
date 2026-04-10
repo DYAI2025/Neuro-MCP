@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import logging
+import os
+import stat
 import threading
 from datetime import datetime, timezone
 from pathlib import Path
@@ -21,6 +24,8 @@ from .notes import scan_brain_documents
 from .reconcile import reconcile_results
 from .search import dedupe_note_results, rank_documents, rank_documents_hybrid
 from .storage import Repository
+
+logger = logging.getLogger(__name__)
 
 
 class NeuroMCPService:
@@ -49,6 +54,28 @@ class NeuroMCPService:
         self.manifests: dict[str, set[str]] = {}
         self._loaded = False
         self._refresh_lock = threading.Lock()
+        self._check_data_dir_permissions()
+
+    def _check_data_dir_permissions(self) -> None:
+        """Warn if data_dir is world-writable — joblib uses pickle, unsafe if writable by others."""
+        data_dir = self.settings.data_dir
+        if not data_dir.exists():
+            return
+        if os.name == "nt":
+            return  # Windows permissions model is different
+        try:
+            mode = data_dir.stat().st_mode
+            if mode & stat.S_IWOTH:
+                logger.warning(
+                    "data_dir '%s' is world-writable. "
+                    "joblib index files use pickle — a malicious actor with write access "
+                    "could execute arbitrary code on load. "
+                    "Fix with: chmod o-w '%s'",
+                    data_dir,
+                    data_dir,
+                )
+        except OSError:
+            pass
 
     def refresh(self) -> None:
         with self._refresh_lock:
