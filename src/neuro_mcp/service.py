@@ -57,6 +57,10 @@ class NeuroMCPService:
         self._loaded = False
         self._refresh_lock = threading.Lock()
         self._check_data_dir_permissions()
+        if self.settings.enable_auto_reconcile:
+            logger.info("Auto-reconcile pipeline stage enabled")
+        if not self.settings.enable_stc:
+            logger.info("STC pipeline stage disabled")
 
     def _check_data_dir_permissions(self) -> None:
         """Warn if data_dir is world-writable — joblib uses pickle, unsafe if writable by others."""
@@ -141,10 +145,47 @@ class NeuroMCPService:
 
             self.notes = notes
             self.manifests = manifests
-
-            self._run_stc_promotions()
-            self._check_labile_linked_paths()
+            # Mark loaded before pipeline stages — index is valid even if enrichment fails.
             self._loaded = True
+
+            # Pipeline stages — order matters: STC first (may promote inbox → 30d),
+            # then labile (marks status based on linked_paths), then reconcile (read-only).
+            # Each stage is isolated so one failure does not block others.
+            if self.settings.enable_stc:
+                try:
+                    self._run_stc_promotions()
+                except Exception:
+                    logger.exception("STC promotion stage failed")
+            try:
+                self._check_labile_linked_paths()
+            except Exception:
+                logger.exception("Labile marking stage failed")
+            if self.settings.enable_auto_reconcile:
+                try:
+                    self._run_auto_reconcile()
+                except Exception:
+                    logger.exception("Auto-reconcile stage failed")
+
+    def _run_auto_reconcile(self) -> None:
+        """Trigger reconcile on notes whose linked_paths overlap with recently changed files."""
+        try:
+            changed = set(changed_files_since(self.settings.code_root))
+        except Exception:
+            changed = set()
+        if not changed:
+            return
+        notes_to_reconcile = [
+            note for note in self.notes.values()
+            if note.linked_paths and any(p in changed for p in note.linked_paths)
+        ]
+        if not notes_to_reconcile:
+            return
+        logger.info("Auto-reconcile triggered for %d note(s)", len(notes_to_reconcile))
+        for note in notes_to_reconcile:
+            try:
+                self.reconcile(note.title)
+            except Exception:
+                logger.exception("Reconcile failed for note: %s", note.path)
 
     def load(self) -> None:
         """Load from persisted index if available, otherwise full refresh."""
