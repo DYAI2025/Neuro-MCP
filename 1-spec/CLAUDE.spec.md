@@ -93,6 +93,9 @@ When an artifact (goal, user story, requirement) is no longer relevant:
 | File | Priority | Status | Summary |
 |------|----------|--------|---------|
 | [GOAL-paid-api-readiness](goals/GOAL-paid-api-readiness.md) | Must-have | Draft | Bring FuFirE to production quality for paid B2B API launch |
+| [GOAL-knowledge-discipline-engine](goals/GOAL-knowledge-discipline-engine.md) | Must-have | Draft | Transform NeuroMCP into a knowledge discipline engine with contradiction detection and reconsolidation |
+| [GOAL-self-maintaining-memory](goals/GOAL-self-maintaining-memory.md) | Must-have | Draft | Self-maintaining knowledge base with STC promotion, homeostasis, and real GC mutations |
+| [GOAL-evidence-network](goals/GOAL-evidence-network.md) | Should-have | Draft | Precision-weighted evidence graph with typed nodes, weighted edges, and graph-based retrieval |
 
 ---
 
