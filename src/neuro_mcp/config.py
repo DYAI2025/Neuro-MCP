@@ -72,8 +72,7 @@ class Settings(BaseModel):
     auto_mark_labile: bool = False
     auto_watch: bool = True
     watch_debounce_seconds: float = 5.0
-    enable_stc: bool = False
-    enable_auto_labile: bool = False
+    enable_stc: bool = True
     enable_auto_reconcile: bool = False
 
     @model_validator(mode="after")
