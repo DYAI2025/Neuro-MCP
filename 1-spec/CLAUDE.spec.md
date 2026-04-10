@@ -116,6 +116,10 @@ When an artifact (goal, user story, requirement) is no longer relevant:
 | [US-accurate-rate-limits](user-stories/US-accurate-rate-limits.md) | STK-api-consumer | Must-have | Draft | Accurate per-key rate limit tracking |
 | [US-transparent-fusion](user-stories/US-transparent-fusion.md) | STK-api-consumer | Should-have | Draft | Full parameter transparency in provenance |
 | [US-honest-feature-scope](user-stories/US-honest-feature-scope.md) | STK-api-consumer | Must-have | Draft | Remove or implement permanently-null fields |
+| [US-auto-frontmatter](user-stories/US-auto-frontmatter.md) | STK-knowledge-worker | Must-have | Draft | Auto-enrich notes with correct frontmatter via folder-to-type mapping |
+| [US-auto-wiki-links](user-stories/US-auto-wiki-links.md) | STK-knowledge-worker | Must-have | Draft | Auto-set bidirectional wiki-links between semantically related notes |
+| [US-auto-linked-paths](user-stories/US-auto-linked-paths.md) | STK-ai-agent | Must-have | Draft | Auto-discover code/class/function references and write to linked_paths |
+| [US-cron-analysis](user-stories/US-cron-analysis.md) | STK-developer | Should-have | Draft | CLI cron-analyze command for batch reconciliation + digest |
 
 ---
 
@@ -141,6 +145,10 @@ When an artifact (goal, user story, requirement) is no longer relevant:
 | [REQ-REL-recency-and-evolution-assessment](requirements/REQ-REL-recency-and-evolution-assessment.md) | Reliability | Should-have | Draft | Distinguish current, superseded, and ambiguous knowledge with confidence |
 | [REQ-F-bidirectional-memory](requirements/REQ-F-bidirectional-memory.md) | Functional | Must-have | Draft | Write-back via brain_ingest_note and watcher-triggered reconciliation |
 | [REQ-F-evidence-graph-schema](requirements/REQ-F-evidence-graph-schema.md) | Functional | Should-have | Draft | Typed evidence graph with precision-weighted edges for search reranking |
+| [REQ-F-auto-frontmatter-enrichment](requirements/REQ-F-auto-frontmatter-enrichment.md) | Functional | Must-have | Draft | Auto-enrich notes with frontmatter via configurable folder-to-type mapping |
+| [REQ-F-auto-wiki-links](requirements/REQ-F-auto-wiki-links.md) | Functional | Must-have | Draft | Bidirectional semantic wiki-links in related_notes frontmatter |
+| [REQ-F-auto-linked-paths](requirements/REQ-F-auto-linked-paths.md) | Functional | Must-have | Draft | Scan notes for code references and write to linked_paths frontmatter |
+| [REQ-F-cron-analyze](requirements/REQ-F-cron-analyze.md) | Functional | Should-have | Draft | CLI cron-analyze: reconcile + interference + digest in one pass |
 
 ---
 
