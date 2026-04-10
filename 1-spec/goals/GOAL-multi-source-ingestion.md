@@ -6,7 +6,7 @@
 
 **Priority**: Should-have
 
-**Source stakeholder**: [STK-developer](../stakeholders.md), [STK-ai-agent](../stakeholders.md)
+**Source stakeholder**: [[1-spec/stakeholders|STK-developer]], [[1-spec/stakeholders|STK-ai-agent]]
 
 ## Success Criteria
 
@@ -17,4 +17,4 @@
 
 ## Related Artifacts
 
-- Requirements: REQ-F-multi-source-knowledge-ingestion
+- Requirements: [[1-spec/requirements/REQ-F-multi-source-knowledge-ingestion|REQ-F-multi-source-knowledge-ingestion]]

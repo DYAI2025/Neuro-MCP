@@ -31,9 +31,15 @@
 
 | Requirement | Priority | Summary |
 |-------------|----------|---------|
-| REQ-F-reconsolidation-transactions | Must-have | Persistent reconsolidation transactions |
-| REQ-F-gc-apply-mutations | Must-have | GC applies real frontmatter mutations |
-| REQ-F-stc-promotion-queue | Must-have | STC-based inbox promotion |
-| REQ-F-labile-auto-mark | Must-have | Auto-mark labile on missing linked files |
-| REQ-F-watcher-orchestration | Must-have | Full watcher pipeline orchestration |
-| REQ-F-decay-defaults-consistency | Must-have | Consistent type-based decay defaults |
+| [[1-spec/requirements/REQ-F-reconsolidation-transactions|REQ-F-reconsolidation-transactions]] | Must-have | Persistent reconsolidation transactions |
+| [[1-spec/requirements/REQ-F-gc-apply-mutations|REQ-F-gc-apply-mutations]] | Must-have | GC applies real frontmatter mutations |
+| [[1-spec/requirements/REQ-F-stc-promotion-queue|REQ-F-stc-promotion-queue]] | Must-have | STC-based inbox promotion |
+| [[1-spec/requirements/REQ-F-labile-auto-mark|REQ-F-labile-auto-mark]] | Must-have | Auto-mark labile on missing linked files |
+| [[1-spec/requirements/REQ-F-watcher-orchestration|REQ-F-watcher-orchestration]] | Must-have | Full watcher pipeline orchestration |
+| [[1-spec/requirements/REQ-F-decay-defaults-consistency|REQ-F-decay-defaults-consistency]] | Must-have | Consistent type-based decay defaults |
+
+## Design References
+
+- [[2-design/architecture|Architecture]]
+- [[2-design/data-model|Data Model]]
+- [[2-design/api-design|API Design]]

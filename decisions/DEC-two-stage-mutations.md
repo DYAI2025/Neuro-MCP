@@ -19,3 +19,9 @@ Trust is the product's foundation. Users must be confident that their written co
 - gc --apply may change status field but must not alter note body
 - Reconsolidation may set status: labile but must not rewrite note content
 - propose_note_patch (future) creates a draft, not an in-place edit
+
+## Related Artifacts
+
+- [[1-spec/goals/GOAL-gc-real-mutations|GOAL-gc-real-mutations]]
+- [[1-spec/goals/GOAL-reconsolidation-workflow|GOAL-reconsolidation-workflow]]
+- [[1-spec/constraints/CON-no-auto-delete|CON-no-auto-delete]]

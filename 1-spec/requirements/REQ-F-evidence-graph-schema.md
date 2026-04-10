@@ -3,7 +3,7 @@
 **Status:** Draft
 **Priority:** Should-have
 **Type:** Functional
-**Source:** GOAL-evidence-graph
+**Source:** [[1-spec/goals/GOAL-evidence-graph|GOAL-evidence-graph]]
 
 ## Description
 
@@ -16,9 +16,9 @@ Add a typed evidence graph layer to storage where notes, code chunks, manifests,
 - [ ] service.refresh() builds/updates the graph from linked_paths, claimed_dependencies, and import chains
 - [ ] search.py supports optional graph-aware reranking (Personalized PageRank or weighted neighborhood expansion)
 - [ ] brain_get_related uses graph edges when available, falls back to embedding similarity
-- [ ] Graph is optional — system works without it (CON-offline-first, CON-backwards-compatible)
+- [ ] Graph is optional — system works without it ([[1-spec/constraints/CON-offline-first|CON-offline-first]], [[1-spec/constraints/CON-backwards-compatible|CON-backwards-compatible]])
 
 ## Related Artifacts
 
-Goal: GOAL-evidence-graph
-Constraint: CON-backwards-compatible, CON-offline-first
+Goal: [[1-spec/goals/GOAL-evidence-graph|GOAL-evidence-graph]]
+Constraint: [[1-spec/constraints/CON-backwards-compatible|CON-backwards-compatible]], [[1-spec/constraints/CON-offline-first|CON-offline-first]]

@@ -3,7 +3,7 @@
 **Status:** Draft
 **Priority:** Must-have
 **Type:** Functional
-**Source:** GOAL-reconsolidation-workflow
+**Source:** [[1-spec/goals/GOAL-reconsolidation-workflow|GOAL-reconsolidation-workflow]]
 
 ## Description
 
@@ -20,5 +20,5 @@ When reconcile() detects a contradiction above the configured threshold, the sys
 
 ## Related Artifacts
 
-Goal: GOAL-reconsolidation-workflow
-Constraint: CON-no-auto-delete
+Goal: [[1-spec/goals/GOAL-reconsolidation-workflow|GOAL-reconsolidation-workflow]]
+Constraint: [[1-spec/constraints/CON-no-auto-delete|CON-no-auto-delete]]

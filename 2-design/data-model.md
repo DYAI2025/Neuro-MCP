@@ -245,3 +245,9 @@ Audit trail for synaptic-tagging promotions (inbox -> permanent note).
 | `reason` | `TEXT` | Why promoted (correlated code changes) |
 | `promoted_at` | `TEXT` | ISO timestamp |
 | `correlated_files` | `TEXT` | JSON array of file paths that triggered promotion |
+
+## Traceability
+
+- [[1-spec/requirements/REQ-F-reconsolidation-transactions|REQ-F-reconsolidation-transactions]]
+- [[1-spec/requirements/REQ-F-evidence-graph-schema|REQ-F-evidence-graph-schema]]
+- [[1-spec/requirements/REQ-F-decay-defaults-consistency|REQ-F-decay-defaults-consistency]]

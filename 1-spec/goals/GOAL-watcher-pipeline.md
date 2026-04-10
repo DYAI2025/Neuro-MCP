@@ -6,7 +6,7 @@
 
 **Priority**: Must-have
 
-**Source stakeholder**: [STK-developer](../stakeholders.md)
+**Source stakeholder**: [[1-spec/stakeholders|STK-developer]]
 
 ## Success Criteria
 
@@ -17,4 +17,4 @@
 
 ## Related Artifacts
 
-- Requirements: REQ-F-watcher-orchestration
+- Requirements: [[1-spec/requirements/REQ-F-watcher-orchestration|REQ-F-watcher-orchestration]]

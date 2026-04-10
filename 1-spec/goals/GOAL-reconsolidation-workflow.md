@@ -6,7 +6,7 @@
 
 **Priority**: Must-have
 
-**Source stakeholder**: [STK-ai-agent](../stakeholders.md), [STK-developer](../stakeholders.md)
+**Source stakeholder**: [[1-spec/stakeholders|STK-ai-agent]], [[1-spec/stakeholders|STK-developer]]
 
 ## Success Criteria
 
@@ -17,4 +17,4 @@
 
 ## Related Artifacts
 
-- Requirements: REQ-F-reconsolidation-transactions, REQ-F-decay-defaults-consistency
+- Requirements: [[1-spec/requirements/REQ-F-reconsolidation-transactions|REQ-F-reconsolidation-transactions]], [[1-spec/requirements/REQ-F-decay-defaults-consistency|REQ-F-decay-defaults-consistency]]

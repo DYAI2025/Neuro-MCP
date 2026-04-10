@@ -6,7 +6,7 @@
 
 **Priority**: Must-have
 
-**Source stakeholder**: [STK-developer](../stakeholders.md), [STK-knowledge-worker](../stakeholders.md)
+**Source stakeholder**: [[1-spec/stakeholders|STK-developer]], [[1-spec/stakeholders|STK-knowledge-worker]]
 
 ## Success Criteria
 
@@ -17,4 +17,4 @@
 
 ## Related Artifacts
 
-- Requirements: REQ-F-stc-promotion-queue
+- Requirements: [[1-spec/requirements/REQ-F-stc-promotion-queue|REQ-F-stc-promotion-queue]]

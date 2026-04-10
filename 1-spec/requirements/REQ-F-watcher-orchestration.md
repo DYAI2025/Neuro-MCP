@@ -3,7 +3,7 @@
 **Status:** Draft
 **Priority:** Must-have
 **Type:** Functional
-**Source:** GOAL-watcher-pipeline
+**Source:** [[1-spec/goals/GOAL-watcher-pipeline|GOAL-watcher-pipeline]]
 
 ## Description
 
@@ -19,4 +19,4 @@ Wire watcher.py into a complete orchestration pipeline: file change -> debounce 
 
 ## Related Artifacts
 
-Goal: GOAL-watcher-pipeline
+Goal: [[1-spec/goals/GOAL-watcher-pipeline|GOAL-watcher-pipeline]]

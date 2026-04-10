@@ -6,7 +6,7 @@
 
 **Priority**: Must-have
 
-**Source stakeholder**: [STK-ai-agent](../stakeholders.md)
+**Source stakeholder**: [[1-spec/stakeholders|STK-ai-agent]]
 
 ## Success Criteria
 
@@ -16,4 +16,4 @@
 
 ## Related Artifacts
 
-- Requirements: REQ-F-labile-auto-mark
+- Requirements: [[1-spec/requirements/REQ-F-labile-auto-mark|REQ-F-labile-auto-mark]]

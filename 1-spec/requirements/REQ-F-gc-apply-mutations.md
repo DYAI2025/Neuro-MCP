@@ -3,7 +3,7 @@
 **Status:** Draft
 **Priority:** Must-have
 **Type:** Functional
-**Source:** GOAL-gc-real-mutations
+**Source:** [[1-spec/goals/GOAL-gc-real-mutations|GOAL-gc-real-mutations]]
 
 ## Description
 
@@ -18,5 +18,5 @@ gc --apply must actually mutate note frontmatter (update status field) instead o
 
 ## Related Artifacts
 
-Goal: GOAL-gc-real-mutations
-Constraint: CON-no-auto-delete
+Goal: [[1-spec/goals/GOAL-gc-real-mutations|GOAL-gc-real-mutations]]
+Constraint: [[1-spec/constraints/CON-no-auto-delete|CON-no-auto-delete]]

@@ -17,3 +17,8 @@ Notes can silently go stale. Code is always current (it either compiles/runs or 
 - reconcile.py must set source_of_truth: "code" when disagreement is detected
 - Search results from code always get freshness: current and source_precision: 1.0
 - Brain notes that contradict code are marked with contradiction_detected: true
+
+## Related Artifacts
+
+- [[1-spec/goals/GOAL-reconsolidation-workflow|GOAL-reconsolidation-workflow]]
+- [[1-spec/constraints/CON-no-auto-delete|CON-no-auto-delete]]

@@ -2,7 +2,7 @@
 
 **Status:** Approved
 **Category:** Technical
-**Source Stakeholder:** STK-developer, STK-knowledge-worker
+**Source Stakeholder:** [[1-spec/stakeholders|STK-developer]], [[1-spec/stakeholders|STK-knowledge-worker]]
 
 ## Description
 

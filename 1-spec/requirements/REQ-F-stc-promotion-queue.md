@@ -3,7 +3,7 @@
 **Status:** Draft
 **Priority:** Must-have
 **Type:** Functional
-**Source:** GOAL-stc-promotion
+**Source:** [[1-spec/goals/GOAL-stc-promotion|GOAL-stc-promotion]]
 
 ## Description
 
@@ -19,4 +19,4 @@ Implement a promotion queue based on Synaptic Tagging and Capture. Inbox notes c
 
 ## Related Artifacts
 
-Goal: GOAL-stc-promotion
+Goal: [[1-spec/goals/GOAL-stc-promotion|GOAL-stc-promotion]]

@@ -3,7 +3,7 @@
 **Status:** Draft
 **Priority:** Must-have
 **Type:** Functional
-**Source:** GOAL-reconsolidation-workflow
+**Source:** [[1-spec/goals/GOAL-reconsolidation-workflow|GOAL-reconsolidation-workflow]]
 
 ## Description
 
@@ -18,5 +18,5 @@ get_note() must use the same type-based decay defaults as the indexer. Currently
 
 ## Related Artifacts
 
-Goal: GOAL-reconsolidation-workflow
-Constraint: CON-backwards-compatible
+Goal: [[1-spec/goals/GOAL-reconsolidation-workflow|GOAL-reconsolidation-workflow]]
+Constraint: [[1-spec/constraints/CON-backwards-compatible|CON-backwards-compatible]]

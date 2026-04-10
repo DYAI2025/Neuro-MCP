@@ -3,7 +3,7 @@
 **Status:** Draft
 **Priority:** Should-have
 **Type:** Reliability
-**Source:** GOAL-coherent-narrative
+**Source:** [[1-spec/goals/GOAL-coherent-narrative|GOAL-coherent-narrative]]
 
 ## Description
 
@@ -17,4 +17,4 @@ The system shall distinguish between current, superseded, and ambiguous project 
 
 ## Related Artifacts
 
-Goal: GOAL-coherent-narrative
+Goal: [[1-spec/goals/GOAL-coherent-narrative|GOAL-coherent-narrative]]

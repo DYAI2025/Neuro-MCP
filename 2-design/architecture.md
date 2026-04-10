@@ -195,3 +195,13 @@ ReconcileReport { query, source_of_truth, mode, brain_results,
 - Path traversal prevention in `brain_get_note` and `write_note` (`.is_relative_to()`)
 - Bearer token auth for HTTP transport (optional, uses `SecretStr`)
 - OAuth2 protected resource metadata endpoint (`/.well-known/oauth-protected-resource`)
+
+## Traceability
+
+- [[1-spec/goals/GOAL-reconsolidation-workflow|GOAL-reconsolidation-workflow]]
+- [[1-spec/goals/GOAL-watcher-pipeline|GOAL-watcher-pipeline]]
+- [[1-spec/goals/GOAL-evidence-graph|GOAL-evidence-graph]]
+- [[1-spec/goals/GOAL-bidirectional-memory|GOAL-bidirectional-memory]]
+- [[1-spec/goals/GOAL-context-bootstrap|GOAL-context-bootstrap]]
+- [[decisions/DEC-code-wins-source-of-truth|DEC-code-wins-source-of-truth]]
+- [[decisions/DEC-two-stage-mutations|DEC-two-stage-mutations]]

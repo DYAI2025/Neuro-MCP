@@ -6,7 +6,7 @@
 
 **Priority**: Must-have
 
-**Source stakeholder**: [STK-developer](../stakeholders.md)
+**Source stakeholder**: [[1-spec/stakeholders|STK-developer]]
 
 ## Success Criteria
 
@@ -17,4 +17,4 @@
 
 ## Related Artifacts
 
-- Requirements: REQ-F-gc-apply-mutations
+- Requirements: [[1-spec/requirements/REQ-F-gc-apply-mutations|REQ-F-gc-apply-mutations]]

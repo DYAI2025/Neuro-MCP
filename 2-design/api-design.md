@@ -228,3 +228,10 @@ Exposed by `create_http_app()` when using `--transport streamable-http`.
 
 1. **OriginGuardMiddleware** -- Rejects requests to `/mcp` from disallowed origins (checks `Origin` header against `allowed_origins`)
 2. **BearerAuthMiddleware** (optional, only when `bearer_token` is set) -- Requires `Authorization: Bearer <token>` header for `/mcp` requests. Uses constant-time comparison. Returns `401` with `WWW-Authenticate` header pointing to metadata URL.
+
+## Traceability
+
+- [[1-spec/requirements/REQ-F-bidirectional-memory|REQ-F-bidirectional-memory]]
+- [[1-spec/requirements/REQ-F-coherence-and-single-source-of-truth|REQ-F-coherence-and-single-source-of-truth]]
+- [[3-code/core-engine/CLAUDE.component|Core Engine]]
+- [[3-code/mcp-server/CLAUDE.component|MCP Server]]

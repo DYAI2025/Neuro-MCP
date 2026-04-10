@@ -3,7 +3,7 @@
 **Status:** Draft
 **Priority:** Must-have
 **Type:** Functional
-**Source:** GOAL-bidirectional-memory
+**Source:** [[1-spec/goals/GOAL-bidirectional-memory|GOAL-bidirectional-memory]]
 
 ## Description
 
@@ -19,5 +19,5 @@ AI sessions must be able to write findings back into the brain vault via brain_i
 
 ## Related Artifacts
 
-Goal: GOAL-bidirectional-memory
-Constraint: CON-no-auto-delete
+Goal: [[1-spec/goals/GOAL-bidirectional-memory|GOAL-bidirectional-memory]]
+Constraint: [[1-spec/constraints/CON-no-auto-delete|CON-no-auto-delete]]

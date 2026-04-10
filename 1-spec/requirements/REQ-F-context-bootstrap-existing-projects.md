@@ -3,7 +3,7 @@
 **Status:** Draft
 **Priority:** Must-have
 **Type:** Functional
-**Source:** GOAL-context-bootstrap
+**Source:** [[1-spec/goals/GOAL-context-bootstrap|GOAL-context-bootstrap]]
 
 ## Description
 
@@ -17,4 +17,4 @@ The system shall perform an initial context reconstruction pass before executing
 
 ## Related Artifacts
 
-Goal: GOAL-context-bootstrap
+Goal: [[1-spec/goals/GOAL-context-bootstrap|GOAL-context-bootstrap]]

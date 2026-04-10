@@ -20,3 +20,7 @@
 8. Multi-Hop Retrieval
 9. Project Memory Growth
 10. Garbage Collection Audit
+
+## Design References
+
+- [[2-design/architecture|Architecture]]

@@ -3,7 +3,7 @@
 **Status:** Draft
 **Priority:** Should-have
 **Type:** Functional
-**Source:** GOAL-multi-source-ingestion
+**Source:** [[1-spec/goals/GOAL-multi-source-ingestion|GOAL-multi-source-ingestion]]
 
 ## Description
 
@@ -17,4 +17,4 @@ The system shall ingest and relate project knowledge from repository content, co
 
 ## Related Artifacts
 
-Goal: GOAL-multi-source-ingestion
+Goal: [[1-spec/goals/GOAL-multi-source-ingestion|GOAL-multi-source-ingestion]]

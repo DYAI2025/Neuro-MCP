@@ -6,7 +6,7 @@
 
 **Priority**: Should-have
 
-**Source stakeholder**: [STK-ai-agent](../stakeholders.md), [STK-team-onboarder](../stakeholders.md)
+**Source stakeholder**: [[1-spec/stakeholders|STK-ai-agent]], [[1-spec/stakeholders|STK-team-onboarder]]
 
 ## Success Criteria
 
@@ -16,4 +16,4 @@
 
 ## Related Artifacts
 
-- Requirements: REQ-F-coherence-and-single-source-of-truth, REQ-REL-recency-and-evolution-assessment
+- Requirements: [[1-spec/requirements/REQ-F-coherence-and-single-source-of-truth|REQ-F-coherence-and-single-source-of-truth]], [[1-spec/requirements/REQ-REL-recency-and-evolution-assessment|REQ-REL-recency-and-evolution-assessment]]

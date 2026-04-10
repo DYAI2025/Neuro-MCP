@@ -3,7 +3,7 @@
 **Status:** Draft
 **Priority:** Should-have
 **Type:** Functional
-**Source:** GOAL-coherent-narrative
+**Source:** [[1-spec/goals/GOAL-coherent-narrative|GOAL-coherent-narrative]]
 
 ## Description
 
@@ -17,4 +17,4 @@ The system shall maintain a persistent, continuously revalidated project narrati
 
 ## Related Artifacts
 
-Goal: GOAL-coherent-narrative
+Goal: [[1-spec/goals/GOAL-coherent-narrative|GOAL-coherent-narrative]]

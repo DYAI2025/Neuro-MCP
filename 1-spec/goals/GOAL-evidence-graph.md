@@ -6,7 +6,7 @@
 
 **Priority**: Should-have
 
-**Source stakeholder**: [STK-ai-agent](../stakeholders.md), [STK-developer](../stakeholders.md)
+**Source stakeholder**: [[1-spec/stakeholders|STK-ai-agent]], [[1-spec/stakeholders|STK-developer]]
 
 ## Success Criteria
 
@@ -17,4 +17,4 @@
 
 ## Related Artifacts
 
-- Requirements: REQ-F-evidence-graph-schema
+- Requirements: [[1-spec/requirements/REQ-F-evidence-graph-schema|REQ-F-evidence-graph-schema]]

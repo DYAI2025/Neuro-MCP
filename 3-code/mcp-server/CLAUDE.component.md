@@ -14,3 +14,8 @@
 
 - `src/neuro_mcp/server.py` -- MCP app builder, tool definitions, middleware
 - `src/neuro_mcp/cli.py` -- CLI entry point, config loading, serve command
+
+## Design References
+
+- [[2-design/api-design|API Design]]
+- [[2-design/architecture|Architecture]]

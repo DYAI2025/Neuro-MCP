@@ -6,7 +6,7 @@
 
 **Priority**: Must-have
 
-**Source stakeholder**: [STK-team-onboarder](../stakeholders.md), [STK-ai-agent](../stakeholders.md)
+**Source stakeholder**: [[1-spec/stakeholders|STK-team-onboarder]], [[1-spec/stakeholders|STK-ai-agent]]
 
 ## Success Criteria
 
@@ -16,4 +16,4 @@
 
 ## Related Artifacts
 
-- Requirements: REQ-F-context-bootstrap-existing-projects
+- Requirements: [[1-spec/requirements/REQ-F-context-bootstrap-existing-projects|REQ-F-context-bootstrap-existing-projects]]
