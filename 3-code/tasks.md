@@ -54,6 +54,23 @@
 | TASK-pipeline-metrics-model | Add PipelineStageResult model | P2 | Done | [REQ-OBS-pipeline-metrics](../1-spec/requirements/REQ-OBS-pipeline-metrics.md) | - | 2026-04-10 | From review S-1/S-2 follow-up |
 | TASK-pipeline-metrics-record | Record stage metrics in refresh(), expose via digest() | P2 | Done | [REQ-OBS-pipeline-metrics](../1-spec/requirements/REQ-OBS-pipeline-metrics.md) | TASK-pipeline-metrics-model | 2026-04-10 | |
 | TASK-storage-thread-local | Thread-local SQLite connection pool for concurrent refresh/search | P0 | Done | - | - | 2026-04-10 | Fixes flaky test_concurrent_refresh_and_search_do_not_raise |
+| TASK-enrichment-marker-field | Add _neuro_mcp_enriched and _neuro_mcp_last marker fields to writer.py and frontmatter module | P1 | Todo | [REQ-F-auto-frontmatter-enrichment](../1-spec/requirements/REQ-F-auto-frontmatter-enrichment.md) | - | 2026-04-10 | Used by all MVP enrichment steps |
+| TASK-folder-type-map-config | Add folder_type_map field to Settings with example mapping | P1 | Todo | [REQ-F-auto-frontmatter-enrichment](../1-spec/requirements/REQ-F-auto-frontmatter-enrichment.md) | - | 2026-04-10 | |
+| TASK-auto-frontmatter-enrich | Enrich notes with missing frontmatter fields based on folder_type_map | P1 | Todo | [REQ-F-auto-frontmatter-enrichment](../1-spec/requirements/REQ-F-auto-frontmatter-enrichment.md) | TASK-enrichment-marker-field, TASK-folder-type-map-config | 2026-04-10 | Only add missing fields, never overwrite |
+| TASK-auto-frontmatter-refresh-hook | Call enrichment as a pipeline stage in refresh() | P1 | Todo | [REQ-F-auto-frontmatter-enrichment](../1-spec/requirements/REQ-F-auto-frontmatter-enrichment.md) | TASK-auto-frontmatter-enrich | 2026-04-10 | New stage in refresh pipeline |
+| TASK-auto-frontmatter-tests | Test: new note gets full frontmatter, partial gets missing fields, folder_type_map respected, marker written | P1 | Todo | [REQ-F-auto-frontmatter-enrichment](../1-spec/requirements/REQ-F-auto-frontmatter-enrichment.md) | TASK-auto-frontmatter-refresh-hook | 2026-04-10 | |
+| TASK-auto-wiki-links-threshold-config | Add auto_link_threshold to Settings (default 0.7) | P1 | Todo | [REQ-F-auto-wiki-links](../1-spec/requirements/REQ-F-auto-wiki-links.md) | - | 2026-04-10 | |
+| TASK-auto-wiki-links-compute | Compute pairwise similarity for all brain notes, collect pairs > threshold | P1 | Todo | [REQ-F-auto-wiki-links](../1-spec/requirements/REQ-F-auto-wiki-links.md) | TASK-auto-wiki-links-threshold-config | 2026-04-10 | Uses existing hybrid embedder |
+| TASK-auto-wiki-links-write | Write bidirectional related_notes frontmatter entries, preserve manual entries | P1 | Todo | [REQ-F-auto-wiki-links](../1-spec/requirements/REQ-F-auto-wiki-links.md) | TASK-auto-wiki-links-compute | 2026-04-10 | Append-only, both directions |
+| TASK-auto-wiki-links-refresh-hook | Add wiki-link generation as pipeline stage in refresh() | P1 | Todo | [REQ-F-auto-wiki-links](../1-spec/requirements/REQ-F-auto-wiki-links.md) | TASK-auto-wiki-links-write | 2026-04-10 | |
+| TASK-auto-wiki-links-tests | Test: similarity threshold, bidirectional, manual preservation, Obsidian format | P1 | Todo | [REQ-F-auto-wiki-links](../1-spec/requirements/REQ-F-auto-wiki-links.md) | TASK-auto-wiki-links-refresh-hook | 2026-04-10 | |
+| TASK-auto-linked-paths-scan | Scan note body for code file names, class/function identifiers, note references | P1 | Todo | [REQ-F-auto-linked-paths](../1-spec/requirements/REQ-F-auto-linked-paths.md) | - | 2026-04-10 | Uses regex + code index match |
+| TASK-auto-linked-paths-match | Match detected identifiers against code index and brain index | P1 | Todo | [REQ-F-auto-linked-paths](../1-spec/requirements/REQ-F-auto-linked-paths.md) | TASK-auto-linked-paths-scan | 2026-04-10 | |
+| TASK-auto-linked-paths-write | Write matched references to linked_paths frontmatter, preserve manual entries | P1 | Todo | [REQ-F-auto-linked-paths](../1-spec/requirements/REQ-F-auto-linked-paths.md) | TASK-auto-linked-paths-match | 2026-04-10 | |
+| TASK-auto-linked-paths-tests | Test: file match, class/func match, manual preservation, no false matches | P1 | Todo | [REQ-F-auto-linked-paths](../1-spec/requirements/REQ-F-auto-linked-paths.md) | TASK-auto-linked-paths-write | 2026-04-10 | |
+| TASK-cron-analyze-cli | Add cron-analyze CLI subcommand that runs reconcile + interference + digest | P2 | Todo | [REQ-F-cron-analyze](../1-spec/requirements/REQ-F-cron-analyze.md) | - | 2026-04-10 | Single-shot, no daemon |
+| TASK-cron-analyze-summary-note | Write summary note to 00-inbox/neuro-mcp-analysis-<date>.md with results | P2 | Todo | [REQ-F-cron-analyze](../1-spec/requirements/REQ-F-cron-analyze.md) | TASK-cron-analyze-cli | 2026-04-10 | |
+| TASK-cron-analyze-tests | Test: subcommand runs, summary note created, frontmatter correct, concurrent-safe | P2 | Todo | [REQ-F-cron-analyze](../1-spec/requirements/REQ-F-cron-analyze.md) | TASK-cron-analyze-summary-note | 2026-04-10 | |
 | TASK-recon-tx-schema | Add reconsolidation_tx table to storage.py | P1 | Todo | [REQ-F-reconsolidation-transactions](../1-spec/requirements/REQ-F-reconsolidation-transactions.md) | - | 2026-04-10 | Auto-create on startup |
 | TASK-recon-tx-create | reconcile() creates reconsolidation_tx when contradiction_score > threshold | P1 | Todo | [REQ-F-reconsolidation-transactions](../1-spec/requirements/REQ-F-reconsolidation-transactions.md) | TASK-recon-tx-schema | 2026-04-10 | |
 | TASK-recon-tx-labile-write | Write status:labile + labile_since + labile_reasons to frontmatter | P1 | Todo | [REQ-F-reconsolidation-transactions](../1-spec/requirements/REQ-F-reconsolidation-transactions.md) | TASK-recon-tx-create | 2026-04-10 | |
@@ -93,6 +110,7 @@
 | TASK-phase-1-manual-testing | Create 4-deploy/runbooks/phase-1-foundation.md with test scenarios | P0 | Done | - | TASK-gc-idempotency-tests, TASK-decay-defaults-tests | 2026-04-10 | |
 | TASK-phase-2-manual-testing | Update runbook with labile + STC test scenarios | P0 | Todo | - | TASK-labile-tests, TASK-stc-promotion-tests | 2026-04-10 | |
 | TASK-phase-3-manual-testing | Update runbook with watcher pipeline scenarios | P0 | Todo | - | TASK-watcher-pipeline-tests | 2026-04-10 | |
+| TASK-phase-3-5-mvp-manual-testing | Create 4-deploy/runbooks/phase-3-5-mvp.md with enrichment test scenarios | P0 | Todo | - | TASK-auto-linked-paths-tests, TASK-auto-wiki-links-tests, TASK-auto-frontmatter-tests, TASK-cron-analyze-tests | 2026-04-10 | |
 | TASK-phase-4-manual-testing | Update runbook with reconsolidation + MCP tool scenarios | P0 | Todo | - | TASK-recon-mcp-tools | 2026-04-10 | |
 | TASK-phase-5-manual-testing | Update runbook with bidirectional memory + bootstrap scenarios | P0 | Todo | - | TASK-bidirectional-tests, TASK-bootstrap-mcp-tool | 2026-04-10 | |
 | TASK-phase-6-manual-testing | Update runbook with evidence graph + coherence scenarios | P0 | Todo | - | TASK-should-have-tests | 2026-04-10 | |
@@ -146,6 +164,35 @@
 3. TASK-watcher-error-isolation
 4. TASK-watcher-pipeline-tests
 5. TASK-phase-3-manual-testing
+
+### Phase 3.5: MVP Auto-Enrichment
+
+**Capabilities delivered:**
+- Notes automatically get folder-based frontmatter (type, decay_class, status, last_verified) — works on existing vaults too
+- Semantically related notes are linked bidirectionally in `related_notes` frontmatter — Obsidian graph shows the knowledge structure
+- Notes scanned for code/class/function references get `linked_paths` populated automatically
+- `cron-analyze` CLI writes health summary as inbox note — fallback for when watcher is not running
+- All enrichments marked with `_neuro_mcp_enriched: true` + `_neuro_mcp_last: <timestamp>`
+
+**Tasks:**
+1. TASK-enrichment-marker-field
+2. TASK-folder-type-map-config
+3. TASK-auto-frontmatter-enrich
+4. TASK-auto-frontmatter-refresh-hook
+5. TASK-auto-frontmatter-tests
+6. TASK-auto-wiki-links-threshold-config
+7. TASK-auto-wiki-links-compute
+8. TASK-auto-wiki-links-write
+9. TASK-auto-wiki-links-refresh-hook
+10. TASK-auto-wiki-links-tests
+11. TASK-auto-linked-paths-scan
+12. TASK-auto-linked-paths-match
+13. TASK-auto-linked-paths-write
+14. TASK-auto-linked-paths-tests
+15. TASK-cron-analyze-cli
+16. TASK-cron-analyze-summary-note
+17. TASK-cron-analyze-tests
+18. TASK-phase-3-5-mvp-manual-testing
 
 ### Phase 4: Reconsolidation Transactions
 
@@ -219,10 +266,11 @@
 | 1 | Foundation Fixes | 6 | GOAL-reconsolidation-workflow (partial), GOAL-gc-real-mutations |
 | 2 | Labile State Machine | 8 | GOAL-labile-auto-marking, GOAL-stc-promotion |
 | 3 | Watcher Pipeline | 5 | GOAL-watcher-pipeline |
+| 3.5 | MVP Auto-Enrichment | 18 | US-auto-frontmatter, US-auto-wiki-links, US-auto-linked-paths, US-cron-analysis |
 | 4 | Reconsolidation Transactions | 9 | GOAL-reconsolidation-workflow (complete) |
 | 5 | Bidirectional Memory & Bootstrap | 9 | GOAL-bidirectional-memory, GOAL-context-bootstrap |
 | 6 | Should-Have Extensions | 11 | GOAL-evidence-graph, GOAL-coherent-narrative, GOAL-multi-source-ingestion |
-| **Total** | | **48 tasks** | **10/10 goals covered** |
+| **Total** | | **69 tasks** | **10/10 goals covered** |
 
 ## How to Update
 
