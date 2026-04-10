@@ -3,7 +3,7 @@
 **Status:** Draft
 **Priority:** Must-have
 **Type:** Functional
-**Source:** GOAL-knowledge-discipline-engine
+**Source:** GOAL-reconsolidation-workflow
 
 ## Description
 
@@ -20,5 +20,5 @@ When reconcile() detects a contradiction above the configured threshold, the sys
 
 ## Related Artifacts
 
-Goal: GOAL-knowledge-discipline-engine
+Goal: GOAL-reconsolidation-workflow
 Constraint: CON-no-auto-delete

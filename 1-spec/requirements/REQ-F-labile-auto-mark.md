@@ -3,7 +3,7 @@
 **Status:** Draft
 **Priority:** Must-have
 **Type:** Functional
-**Source:** GOAL-knowledge-discipline-engine
+**Source:** GOAL-labile-auto-marking
 
 ## Description
 
@@ -18,5 +18,5 @@ The auto_mark_labile config setting (already in config.example.yaml) must have r
 
 ## Related Artifacts
 
-Goal: GOAL-knowledge-discipline-engine
+Goal: GOAL-labile-auto-marking
 Constraint: CON-backwards-compatible

@@ -3,7 +3,7 @@
 **Status:** Draft
 **Priority:** Must-have
 **Type:** Functional
-**Source:** GOAL-self-maintaining-memory
+**Source:** GOAL-watcher-pipeline
 
 ## Description
 
@@ -19,4 +19,4 @@ Wire watcher.py into a complete orchestration pipeline: file change -> debounce 
 
 ## Related Artifacts
 
-Goal: GOAL-self-maintaining-memory
+Goal: GOAL-watcher-pipeline

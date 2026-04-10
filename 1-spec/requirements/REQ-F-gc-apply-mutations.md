@@ -3,7 +3,7 @@
 **Status:** Draft
 **Priority:** Must-have
 **Type:** Functional
-**Source:** GOAL-self-maintaining-memory
+**Source:** GOAL-gc-real-mutations
 
 ## Description
 
@@ -18,5 +18,5 @@ gc --apply must actually mutate note frontmatter (update status field) instead o
 
 ## Related Artifacts
 
-Goal: GOAL-self-maintaining-memory
+Goal: GOAL-gc-real-mutations
 Constraint: CON-no-auto-delete
