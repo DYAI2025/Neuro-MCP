@@ -1,0 +1,34 @@
+brain_root: ./examples/brain
+code_root: ./examples/code
+data_dir: ./.neuro_mcp
+similarity_threshold: 0.85
+stc_window_hours: 48
+phasic_change_threshold: 20
+
+# Hybrid embeddings
+semantic_model: all-MiniLM-L6-v2
+semantic_model_weight: 0.65
+tfidf_model_weight: 0.35
+# semantic_cache_dir: ~/.cache/sentence_transformers
+
+# Search weights
+semantic_weight: 0.55
+lexical_weight: 0.20
+freshness_weight: 0.15
+precision_weight: 0.10
+
+# Neuromorphic automation
+auto_mark_labile: false
+auto_watch: true
+watch_debounce_seconds: 5.0
+
+# Server
+mcp_server_name: NeuroMCP
+mcp_path: /mcp
+bind_host: 127.0.0.1
+bind_port: 8000
+allowed_origins:
+  - http://localhost
+  - https://localhost
+# bearer_token: change-me
+# external_auth_metadata_url: https://auth.example.com/.well-known/oauth-authorization-server
