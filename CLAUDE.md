@@ -121,7 +121,7 @@ NeuroMCP is a production-oriented MCP server and local knowledge engine that kee
 
 ### Current State
 
-The core system is stable (v1): dual brain/code indexing, freshness model, reconciliation, MCP tools, HTTP/stdio transport. Implementation plan created (2026-04-10): 6 phases, 48 tasks covering all 10 approved goals. Implementation progress: 19/50 tasks done. Phase 1 + 2 complete; Phase 3 code complete (runbook pending). Next: Phase 3 runbook, then Phase 4 (Reconsolidation Transactions). See `3-code/tasks.md`.
+The core system is stable (v1): dual brain/code indexing, freshness model, reconciliation, MCP tools, HTTP/stdio transport. Implementation plan created (2026-04-10): 6 phases, 48 tasks covering all 10 approved goals. Implementation progress: 20/51 tasks done. Phase 1 + 2 complete; Phase 3 code complete (runbook pending). Next: Phase 3 runbook, then Phase 4 (Reconsolidation Transactions). See `3-code/tasks.md`.
 
 ## SDLC Structure
 
