@@ -17,4 +17,4 @@
 
 ## Related Artifacts
 
-- Requirements: _to be created_
+- Requirements: REQ-F-bidirectional-memory

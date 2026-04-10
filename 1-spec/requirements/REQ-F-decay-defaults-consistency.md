@@ -3,7 +3,7 @@
 **Status:** Draft
 **Priority:** Must-have
 **Type:** Functional
-**Source:** GOAL-knowledge-discipline-engine
+**Source:** GOAL-reconsolidation-workflow
 
 ## Description
 
@@ -18,5 +18,5 @@ get_note() must use the same type-based decay defaults as the indexer. Currently
 
 ## Related Artifacts
 
-Goal: GOAL-knowledge-discipline-engine
+Goal: GOAL-reconsolidation-workflow
 Constraint: CON-backwards-compatible

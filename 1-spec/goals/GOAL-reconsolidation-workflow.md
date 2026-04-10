@@ -17,4 +17,4 @@
 
 ## Related Artifacts
 
-- Requirements: REQ-F-reconsolidation-transactions
+- Requirements: REQ-F-reconsolidation-transactions, REQ-F-decay-defaults-consistency

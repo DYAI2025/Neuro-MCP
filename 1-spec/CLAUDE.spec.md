@@ -139,6 +139,8 @@ When an artifact (goal, user story, requirement) is no longer relevant:
 | [REQ-F-multi-source-knowledge-ingestion](requirements/REQ-F-multi-source-knowledge-ingestion.md) | Functional | Should-have | Draft | Ingest and relate knowledge from multiple source families |
 | [REQ-F-coherence-and-single-source-of-truth](requirements/REQ-F-coherence-and-single-source-of-truth.md) | Functional | Should-have | Draft | Persistent revalidated project narrative as single source of truth |
 | [REQ-REL-recency-and-evolution-assessment](requirements/REQ-REL-recency-and-evolution-assessment.md) | Reliability | Should-have | Draft | Distinguish current, superseded, and ambiguous knowledge with confidence |
+| [REQ-F-bidirectional-memory](requirements/REQ-F-bidirectional-memory.md) | Functional | Must-have | Draft | Write-back via brain_ingest_note and watcher-triggered reconciliation |
+| [REQ-F-evidence-graph-schema](requirements/REQ-F-evidence-graph-schema.md) | Functional | Should-have | Draft | Typed evidence graph with precision-weighted edges for search reranking |
 
 ---
 

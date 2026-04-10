@@ -16,4 +16,4 @@
 
 ## Related Artifacts
 
-- Requirements: REQ-F-coherence-and-single-source-of-truth
+- Requirements: REQ-F-coherence-and-single-source-of-truth, REQ-REL-recency-and-evolution-assessment
