@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hmac
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from typing import Any
@@ -142,7 +143,7 @@ def create_http_app(settings: Settings):
                 return await call_next(request)
             token = request.headers.get("authorization", "")
             expected = f"Bearer {settings.bearer_token}"
-            if token == expected:
+            if hmac.compare_digest(token, expected):
                 return await call_next(request)
             metadata_url = settings.external_auth_metadata_url or "/.well-known/oauth-protected-resource"
             headers = {

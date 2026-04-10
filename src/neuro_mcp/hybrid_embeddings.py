@@ -1,6 +1,7 @@
 """Hybrid embedder combining TF-IDF (lexical precision) with sentence-transformers (semantic understanding)."""
 from __future__ import annotations
 
+import logging
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -10,6 +11,8 @@ from .embeddings import TfidfEmbedder, cosine_dense
 
 if TYPE_CHECKING:
     pass
+
+logger = logging.getLogger(__name__)
 
 
 class HybridEmbedder:
@@ -47,6 +50,10 @@ class HybridEmbedder:
                     self._has_st = True
                 except ImportError:
                     self._has_st = False
+                    logger.warning(
+                        "sentence-transformers not installed — falling back to TF-IDF only. "
+                        "Install with: pip install 'neuro-mcp-server[semantic]'"
+                    )
         return self._has_st
 
     def _load_model(self) -> bool:

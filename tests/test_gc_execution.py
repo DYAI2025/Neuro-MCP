@@ -28,9 +28,9 @@ def test_execute_gc_updates_frontmatter(tmp_path: Path):
     assert meta["status"] == "archived"
     assert "archived_at" in meta
 
-    # Backup exists
+    # Backup exists with note_id prefix to prevent collisions
     assert (tmp_path / "backups").exists()
-    assert (tmp_path / "backups" / "note.md").exists()
+    assert (tmp_path / "backups" / "x_note.md").exists()
 
 
 def test_execute_gc_file_not_found(tmp_path: Path):

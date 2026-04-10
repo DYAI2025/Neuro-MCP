@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 
 DEFAULT_EXTENSIONS = [
@@ -71,6 +71,20 @@ class Settings(BaseModel):
     semantic_cache_dir: str | None = None
     auto_watch: bool = True
     watch_debounce_seconds: float = 5.0
+
+    @model_validator(mode="after")
+    def _check_search_weights(self) -> "Settings":
+        total = self.semantic_weight + self.lexical_weight + self.freshness_weight + self.precision_weight
+        if abs(total - 1.0) > 0.05:
+            raise ValueError(f"Search weights must sum to ~1.0, got {total:.2f}")
+        return self
+
+    @model_validator(mode="after")
+    def _check_hybrid_weights(self) -> "Settings":
+        total = self.semantic_model_weight + self.tfidf_model_weight
+        if abs(total - 1.0) > 0.05:
+            raise ValueError(f"Hybrid embedding weights must sum to ~1.0, got {total:.2f}")
+        return self
 
     @field_validator("brain_root", "code_root", "data_dir", mode="before")
     @classmethod

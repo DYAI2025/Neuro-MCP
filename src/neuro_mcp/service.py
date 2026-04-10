@@ -177,7 +177,9 @@ class NeuroMCPService:
 
     def get_note(self, relative_path: str) -> dict:
         """Retrieve a specific brain note by relative path."""
-        full_path = self.settings.brain_root / relative_path
+        full_path = (self.settings.brain_root / relative_path).resolve()
+        if not full_path.is_relative_to(self.settings.brain_root.resolve()):
+            return {"found": False, "path": relative_path, "error": "Path traversal outside brain root"}
         if not full_path.exists() or not full_path.is_file():
             return {"found": False, "path": relative_path, "error": "Note not found"}
 

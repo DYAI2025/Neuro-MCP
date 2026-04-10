@@ -92,7 +92,8 @@ def execute_gc_actions(
         # Backup
         if backup_dir:
             backup_dir.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(path, backup_dir / path.name)
+            backup_name = f"{item.note_id}_{path.name}"
+            shutil.copy2(path, backup_dir / backup_name)
 
         meta, body = parse_markdown_note(path)
         meta["status"] = item.status_after

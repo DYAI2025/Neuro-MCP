@@ -25,6 +25,8 @@ def scan_code_documents(settings: Settings) -> tuple[list[DocumentRecord], dict[
     for path in sorted(root.rglob("*")):
         if path.is_dir():
             continue
+        if not path.resolve().is_relative_to(root.resolve()):
+            continue
         if path_is_excluded(path, settings.exclude_dirs):
             continue
         if path.name not in MANIFEST_NAMES and path.suffix.lower() not in settings.include_extensions:

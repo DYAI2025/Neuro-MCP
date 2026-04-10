@@ -10,7 +10,7 @@ WORD_RE = re.compile(r"[A-Za-z0-9_\-./]+")
 
 
 def stable_id(*parts: str) -> str:
-    digest = hashlib.sha1("||".join(parts).encode("utf-8")).hexdigest()
+    digest = hashlib.sha256("||".join(parts).encode("utf-8")).hexdigest()
     return digest
 
 

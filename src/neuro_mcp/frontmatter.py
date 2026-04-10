@@ -7,7 +7,7 @@ from typing import Any
 import yaml
 
 
-FRONTMATTER_RE = re.compile(r"^---\n(.*?)\n---\n(.*)$", re.DOTALL)
+FRONTMATTER_RE = re.compile(r"^---\r?\n(.*?)\r?\n---\r?\n(.*)$", re.DOTALL)
 
 
 def parse_markdown_note(path: str | Path) -> tuple[dict[str, Any], str]:

@@ -94,6 +94,8 @@ def scan_brain_documents(settings: Settings) -> tuple[list[DocumentRecord], dict
     notes: dict[str, NoteMetadata] = {}
 
     for path in sorted(root.rglob("*.md")):
+        if not path.resolve().is_relative_to(root.resolve()):
+            continue
         rel_path = path.relative_to(root)
         metadata_raw, body = parse_markdown_note(path)
         note_type = _guess_note_type(rel_path, metadata_raw)

@@ -26,7 +26,9 @@ def write_note(
     extra_metadata: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Write or update a note. Returns status dict."""
-    full_path = brain_root / relative_path
+    full_path = (brain_root / relative_path).resolve()
+    if not full_path.is_relative_to(brain_root.resolve()):
+        raise ValueError(f"Path escapes outside brain root: {relative_path}")
     existed = full_path.exists()
 
     metadata: dict[str, Any] = {
