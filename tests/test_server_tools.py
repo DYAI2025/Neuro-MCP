@@ -102,7 +102,18 @@ def test_mcp_registers_expected_tools_and_basic_invocation(tmp_path: Path):
     assert "source_of_truth" in reconcile
 
     digest = app.tools["freshness_digest"]()
-    assert "total_notes" in digest
+    expected_digest_keys = {
+        "generated_at",
+        "mode",
+        "total_notes",
+        "stale_notes",
+        "labile_notes",
+        "missing_source_notes",
+        "top_risks",
+        "next_actions",
+    }
+    assert expected_digest_keys.issubset(digest)
+    assert "summary" not in digest
 
     gc_result = app.tools["run_garbage_collection"](dry_run=True)
     assert gc_result["dry_run"] is True
