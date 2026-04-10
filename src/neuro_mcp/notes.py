@@ -53,6 +53,17 @@ def _guess_note_type(path: Path, metadata: dict[str, Any]) -> str:
     return "note"
 
 
+def _coerce_status(raw_value: Any, fallback: NoteStatus) -> NoteStatus:
+    """Parse a NoteStatus from frontmatter, falling back gracefully for unknown values."""
+    value = str(raw_value) if raw_value else None
+    if not value:
+        return fallback
+    try:
+        return NoteStatus(value)
+    except ValueError:
+        return NoteStatus.ACTIVE
+
+
 def _coerce_list(value: Any) -> list[str]:
     if value is None:
         return []
@@ -126,7 +137,7 @@ def scan_brain_documents(settings: Settings) -> tuple[list[DocumentRecord], dict
             title=str(metadata_raw.get("title") or rel_path.stem),
             path=str(path),
             note_type=note_type,
-            status=NoteStatus(str(metadata_raw.get("status") or freshness.recommended_status.value)),
+            status=_coerce_status(metadata_raw.get("status"), freshness.recommended_status),
             created=created,
             last_verified=last_verified,
             decay_class=decay_class,

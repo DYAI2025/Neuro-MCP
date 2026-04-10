@@ -16,7 +16,11 @@ def parse_markdown_note(path: str | Path) -> tuple[dict[str, Any], str]:
     if not match:
         return {}, text
     frontmatter_text, body = match.groups()
-    metadata = yaml.safe_load(frontmatter_text) or {}
+    try:
+        metadata = yaml.safe_load(frontmatter_text) or {}
+    except yaml.YAMLError:
+        # Malformed frontmatter (e.g. template placeholders like {{title}})
+        return {}, text
     if not isinstance(metadata, dict):
         metadata = {}
     return metadata, body
