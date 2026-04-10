@@ -93,9 +93,16 @@ When an artifact (goal, user story, requirement) is no longer relevant:
 | File | Priority | Status | Summary |
 |------|----------|--------|---------|
 | [GOAL-paid-api-readiness](goals/GOAL-paid-api-readiness.md) | Must-have | Draft | Bring FuFirE to production quality for paid B2B API launch |
-| [GOAL-knowledge-discipline-engine](goals/GOAL-knowledge-discipline-engine.md) | Must-have | Draft | Transform NeuroMCP into a knowledge discipline engine with contradiction detection and reconsolidation |
-| [GOAL-self-maintaining-memory](goals/GOAL-self-maintaining-memory.md) | Must-have | Draft | Self-maintaining knowledge base with STC promotion, homeostasis, and real GC mutations |
-| [GOAL-evidence-network](goals/GOAL-evidence-network.md) | Should-have | Draft | Precision-weighted evidence graph with typed nodes, weighted edges, and graph-based retrieval |
+| [GOAL-reconsolidation-workflow](goals/GOAL-reconsolidation-workflow.md) | Must-have | Draft | Persistent state machine for brain-code contradiction resolution with audit trail |
+| [GOAL-labile-auto-marking](goals/GOAL-labile-auto-marking.md) | Must-have | Draft | Auto-mark notes labile when linked source files no longer exist |
+| [GOAL-stc-promotion](goals/GOAL-stc-promotion.md) | Must-have | Draft | Promote inbox notes to 30d decay when correlated code changes occur in STC window |
+| [GOAL-gc-real-mutations](goals/GOAL-gc-real-mutations.md) | Must-have | Draft | gc --apply actually mutates note frontmatter idempotently |
+| [GOAL-watcher-pipeline](goals/GOAL-watcher-pipeline.md) | Must-have | Draft | Complete watcher orchestration pipeline with independently configurable stages |
+| [GOAL-evidence-graph](goals/GOAL-evidence-graph.md) | Should-have | Draft | Typed evidence graph with precision-weighted edges and graph-aware search |
+| [GOAL-context-bootstrap](goals/GOAL-context-bootstrap.md) | Must-have | Draft | Reconstruct semantic and historical context when attaching to existing projects |
+| [GOAL-multi-source-ingestion](goals/GOAL-multi-source-ingestion.md) | Should-have | Draft | Ingest and relate knowledge from multiple source families |
+| [GOAL-coherent-narrative](goals/GOAL-coherent-narrative.md) | Should-have | Draft | Persistent, continuously revalidated project narrative as single source of truth |
+| [GOAL-bidirectional-memory](goals/GOAL-bidirectional-memory.md) | Must-have | Draft | AI sessions write findings back as notes; code changes auto-reconcile brain notes |
 
 ---
 
@@ -128,6 +135,10 @@ When an artifact (goal, user story, requirement) is no longer relevant:
 | [REQ-F-labile-auto-mark](requirements/REQ-F-labile-auto-mark.md) | Functional | Must-have | Draft | Auto-mark notes labile when linked files are deleted |
 | [REQ-F-watcher-orchestration](requirements/REQ-F-watcher-orchestration.md) | Functional | Must-have | Draft | Full watcher orchestration pipeline |
 | [REQ-F-decay-defaults-consistency](requirements/REQ-F-decay-defaults-consistency.md) | Functional | Must-have | Draft | Consistent type-based decay defaults across get_note and indexer |
+| [REQ-F-context-bootstrap-existing-projects](requirements/REQ-F-context-bootstrap-existing-projects.md) | Functional | Must-have | Draft | Initial context reconstruction pass for non-empty projects |
+| [REQ-F-multi-source-knowledge-ingestion](requirements/REQ-F-multi-source-knowledge-ingestion.md) | Functional | Should-have | Draft | Ingest and relate knowledge from multiple source families |
+| [REQ-F-coherence-and-single-source-of-truth](requirements/REQ-F-coherence-and-single-source-of-truth.md) | Functional | Should-have | Draft | Persistent revalidated project narrative as single source of truth |
+| [REQ-REL-recency-and-evolution-assessment](requirements/REQ-REL-recency-and-evolution-assessment.md) | Reliability | Should-have | Draft | Distinguish current, superseded, and ambiguous knowledge with confidence |
 
 ---
 
@@ -149,3 +160,4 @@ When an artifact (goal, user story, requirement) is no longer relevant:
 | [CON-no-auto-delete](constraints/CON-no-auto-delete.md) | Operational | Approved | No auto-deletion; content mutation requires explicit --apply |
 | [CON-offline-first](constraints/CON-offline-first.md) | Technical | Approved | TF-IDF default; no internet required for core functionality |
 | [CON-backwards-compatible](constraints/CON-backwards-compatible.md) | Technical | Approved | v2 must not break existing configs, CLI, or MCP signatures |
+| [CON-obsidian-plus-serving-agent](constraints/CON-obsidian-plus-serving-agent.md) | Technical | Draft | Obsidian (or any markdown vault) + MCP protocol; no Obsidian plugin dependencies |
