@@ -39,7 +39,7 @@ class Repository:
     def _get_conn(self) -> sqlite3.Connection:
         """Return the cached connection, creating it if needed."""
         if self._conn is None:
-            self._conn = sqlite3.connect(str(self.db_path))
+            self._conn = sqlite3.connect(str(self.db_path), check_same_thread=False)
             self._conn.row_factory = sqlite3.Row
         return self._conn
 

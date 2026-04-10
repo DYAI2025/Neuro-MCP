@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import threading
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -47,22 +48,24 @@ class NeuroMCPService:
         self.notes = {}
         self.manifests: dict[str, set[str]] = {}
         self._loaded = False
+        self._refresh_lock = threading.Lock()
 
     def refresh(self) -> None:
-        brain_docs, notes = scan_brain_documents(self.settings)
-        code_docs, manifests = scan_code_documents(self.settings)
+        with self._refresh_lock:
+            brain_docs, notes = scan_brain_documents(self.settings)
+            code_docs, manifests = scan_code_documents(self.settings)
 
-        self.repo.replace_kind(DocKind.BRAIN, brain_docs)
-        self.repo.replace_kind(DocKind.CODE, code_docs)
+            self.repo.replace_kind(DocKind.BRAIN, brain_docs)
+            self.repo.replace_kind(DocKind.CODE, code_docs)
 
-        self.brain_hybrid.fit([doc.content for doc in brain_docs])
-        self.code_hybrid.fit([doc.content for doc in code_docs])
-        self.brain_embedder.save()
-        self.code_embedder.save()
+            self.brain_hybrid.fit([doc.content for doc in brain_docs])
+            self.code_hybrid.fit([doc.content for doc in code_docs])
+            self.brain_embedder.save()
+            self.code_embedder.save()
 
-        self.notes = notes
-        self.manifests = manifests
-        self._loaded = True
+            self.notes = notes
+            self.manifests = manifests
+            self._loaded = True
 
     def load(self) -> None:
         # For simplicity and correctness we always rebuild from source if roots exist.
