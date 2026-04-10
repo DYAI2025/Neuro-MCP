@@ -125,6 +125,13 @@ class GarbageCollectionReport(BaseModel):
     execution_results: list[dict[str, Any]] = Field(default_factory=list)
 
 
+class PipelineStageResult(BaseModel):
+    stage: str
+    items_processed: int = 0
+    duration_ms: float = 0.0
+    error_count: int = 0
+
+
 class DigestReport(BaseModel):
     generated_at: str
     mode: Mode
@@ -136,6 +143,7 @@ class DigestReport(BaseModel):
     recent_promotions: int = 0
     top_risks: list[str] = Field(default_factory=list)
     next_actions: list[str] = Field(default_factory=list)
+    pipeline_stages: list[PipelineStageResult] = Field(default_factory=list)
 
 
 class ChangeSet(BaseModel):
