@@ -74,7 +74,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "9e1dcdefd1bd6d98",
@@ -178,6 +179,7 @@
   },
   "active": "6939cad410383cd0",
   "lastOpenFiles": [
+    "requirements/REQ-OBS-pipeline-metrics.md",
     "requirements/REQ-F-cron-analyze.md",
     "requirements/REQ-F-auto-linked-paths.md",
     "requirements/REQ-F-auto-wiki-links.md",

@@ -149,6 +149,7 @@ When an artifact (goal, user story, requirement) is no longer relevant:
 | [REQ-F-auto-wiki-links](requirements/REQ-F-auto-wiki-links.md) | Functional | Must-have | Draft | Bidirectional semantic wiki-links in related_notes frontmatter |
 | [REQ-F-auto-linked-paths](requirements/REQ-F-auto-linked-paths.md) | Functional | Must-have | Draft | Scan notes for code references and write to linked_paths frontmatter |
 | [REQ-F-cron-analyze](requirements/REQ-F-cron-analyze.md) | Functional | Should-have | Draft | CLI cron-analyze: reconcile + interference + digest in one pass |
+| [REQ-OBS-pipeline-metrics](requirements/REQ-OBS-pipeline-metrics.md) | Observability | Should-have | Draft | Per-stage watcher pipeline metrics surfaced in digest and brain_status |
 
 ---
 

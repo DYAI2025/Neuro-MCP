@@ -17,4 +17,4 @@
 
 ## Related Artifacts
 
-- Requirements: [[1-spec/requirements/REQ-F-watcher-orchestration|REQ-F-watcher-orchestration]]
+- Requirements: [[1-spec/requirements/REQ-F-watcher-orchestration|REQ-F-watcher-orchestration]], [[1-spec/requirements/REQ-OBS-pipeline-metrics|REQ-OBS-pipeline-metrics]]
