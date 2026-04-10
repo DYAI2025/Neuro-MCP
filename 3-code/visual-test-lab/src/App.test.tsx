@@ -11,7 +11,7 @@ describe("App", () => {
   it("renders the test lab panels", () => {
     render(<App />);
     expect(screen.getByText(/Neuro-MCP Visual Test Environment Kit/i)).toBeInTheDocument();
-    expect(screen.getByText(/Graph View/i)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Graph View/i })).toBeInTheDocument();
     expect(screen.getByText(/Scenario Control Panel/i)).toBeInTheDocument();
     expect(screen.getByText(/Event Timeline/i)).toBeInTheDocument();
     expect(screen.getByText(/Inspector Panel/i)).toBeInTheDocument();
