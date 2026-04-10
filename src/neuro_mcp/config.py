@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic import BaseModel, Field, SecretStr, field_validator, model_validator
 
 
 DEFAULT_EXTENSIONS = [
@@ -58,7 +58,7 @@ class Settings(BaseModel):
     bind_host: str = "127.0.0.1"
     bind_port: int = 8000
     allowed_origins: list[str] = Field(default_factory=lambda: ["http://localhost", "https://localhost"])
-    bearer_token: str | None = None
+    bearer_token: SecretStr | None = None
     external_auth_metadata_url: str | None = None
     precision_weight: float = 0.10
     freshness_weight: float = 0.15

@@ -4,6 +4,8 @@ import argparse
 import json
 import sys
 
+from pydantic import SecretStr
+
 from .config import Settings
 from .service import NeuroMCPService
 
@@ -23,7 +25,7 @@ def _settings_from_args(args: argparse.Namespace) -> Settings:
     if args.data_dir:
         settings.data_dir = settings.data_dir.__class__(args.data_dir).expanduser().resolve()
     if args.bearer_token:
-        settings.bearer_token = args.bearer_token
+        settings.bearer_token = SecretStr(args.bearer_token)
     return settings
 
 

@@ -33,56 +33,67 @@ class Repository:
     def __init__(self, db_path: str | Path) -> None:
         self.db_path = Path(db_path)
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
+        self._conn: sqlite3.Connection | None = None
         self._init()
 
-    def _connect(self) -> sqlite3.Connection:
-        connection = sqlite3.connect(str(self.db_path))
-        connection.row_factory = sqlite3.Row
-        return connection
+    def _get_conn(self) -> sqlite3.Connection:
+        """Return the cached connection, creating it if needed."""
+        if self._conn is None:
+            self._conn = sqlite3.connect(str(self.db_path))
+            self._conn.row_factory = sqlite3.Row
+        return self._conn
+
+    def close(self) -> None:
+        """Close the cached connection."""
+        if self._conn is not None:
+            self._conn.close()
+            self._conn = None
 
     def _init(self) -> None:
-        with self._connect() as conn:
-            conn.executescript(SCHEMA)
+        conn = self._get_conn()
+        conn.executescript(SCHEMA)
+        conn.commit()
 
     def replace_kind(self, kind: DocKind, documents: Iterable[DocumentRecord]) -> None:
         docs = list(documents)
-        with self._connect() as conn:
-            conn.execute("DELETE FROM documents WHERE kind = ?", (kind.value,))
-            conn.executemany(
-                """
-                INSERT INTO documents (
-                    doc_id, kind, owner_id, path, uri, title, content, snippet,
-                    line_start, line_end, content_hash, metadata_json
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """,
-                [
-                    (
-                        doc.doc_id,
-                        doc.kind.value,
-                        doc.owner_id,
-                        doc.path,
-                        doc.uri,
-                        doc.title,
-                        doc.content,
-                        doc.snippet,
-                        doc.line_start,
-                        doc.line_end,
-                        doc.content_hash,
-                        json.dumps(doc.metadata, ensure_ascii=True),
-                    )
-                    for doc in docs
-                ],
-            )
+        conn = self._get_conn()
+        conn.execute("DELETE FROM documents WHERE kind = ?", (kind.value,))
+        conn.executemany(
+            """
+            INSERT INTO documents (
+                doc_id, kind, owner_id, path, uri, title, content, snippet,
+                line_start, line_end, content_hash, metadata_json
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            [
+                (
+                    doc.doc_id,
+                    doc.kind.value,
+                    doc.owner_id,
+                    doc.path,
+                    doc.uri,
+                    doc.title,
+                    doc.content,
+                    doc.snippet,
+                    doc.line_start,
+                    doc.line_end,
+                    doc.content_hash,
+                    json.dumps(doc.metadata, ensure_ascii=True),
+                )
+                for doc in docs
+            ],
+        )
+        conn.commit()
 
     def all_documents(self, kind: DocKind | None = None) -> list[DocumentRecord]:
-        with self._connect() as conn:
-            if kind is None:
-                rows = conn.execute("SELECT * FROM documents ORDER BY kind, path, line_start").fetchall()
-            else:
-                rows = conn.execute(
-                    "SELECT * FROM documents WHERE kind = ? ORDER BY path, line_start",
-                    (kind.value,),
-                ).fetchall()
+        conn = self._get_conn()
+        if kind is None:
+            rows = conn.execute("SELECT * FROM documents ORDER BY kind, path, line_start").fetchall()
+        else:
+            rows = conn.execute(
+                "SELECT * FROM documents WHERE kind = ? ORDER BY path, line_start",
+                (kind.value,),
+            ).fetchall()
         return [self._row_to_document(row) for row in rows]
 
     @staticmethod

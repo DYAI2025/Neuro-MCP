@@ -1,9 +1,12 @@
 """Interference detection: find overlapping/contradicting notes via embedding similarity."""
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass
 
 import numpy as np
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass(slots=True)
@@ -20,15 +23,30 @@ def check_interference(
     paths: list[str],
     owner_ids: list[str],
     threshold: float = 0.85,
+    max_documents: int = 1000,
 ) -> list[InterferenceCandidate]:
     """Pairwise cosine similarity check. Returns candidates above threshold.
 
     - Same owner_id -> merge candidate (sections of same note are near-duplicates)
     - Different owner_id -> cross_link candidate (different notes overlap)
+
+    If more than *max_documents* are provided, the input is truncated and a
+    warning is logged. This prevents O(n^2) blowup on large note bases.
     """
     n = len(paths)
     if n < 2 or embeddings.shape[0] < 2:
         return []
+
+    if n > max_documents:
+        logger.warning(
+            "Interference check capped: %d documents truncated to %d (O(n^2) safety limit)",
+            n,
+            max_documents,
+        )
+        embeddings = embeddings[:max_documents]
+        paths = paths[:max_documents]
+        owner_ids = owner_ids[:max_documents]
+        n = max_documents
 
     # Normalize if not already
     norms = np.linalg.norm(embeddings, axis=1, keepdims=True)

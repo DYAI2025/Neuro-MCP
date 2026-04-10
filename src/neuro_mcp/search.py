@@ -28,7 +28,11 @@ def rank_documents(
     query_vector = embedder.transform([query])
     semantic_scores = cosine_dense(embedder.doc_matrix, query_vector)
     results: list[SearchResult] = []
-    for document, semantic in zip(documents, semantic_scores, strict=False):
+    if len(semantic_scores) != len(documents):
+        raise ValueError(
+            f"Score/document length mismatch: {len(semantic_scores)} scores vs {len(documents)} documents"
+        )
+    for document, semantic in zip(documents, semantic_scores, strict=True):
         metadata = document.metadata
         freshness = metadata.get("freshness", "current")
         source_precision = float(metadata.get("source_precision", 0.5))
@@ -110,6 +114,10 @@ def rank_documents_hybrid(
     tfidf_scores, semantic_scores = hybrid_embedder.score(query)
     if len(tfidf_scores) == 0 and len(semantic_scores) == 0:
         return []
+    if len(tfidf_scores) > 0 and len(tfidf_scores) != len(documents):
+        raise ValueError(
+            f"TF-IDF score/document length mismatch: {len(tfidf_scores)} scores vs {len(documents)} documents"
+        )
 
     results: list[SearchResult] = []
     for idx, document in enumerate(documents):

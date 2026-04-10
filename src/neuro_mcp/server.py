@@ -137,12 +137,12 @@ def create_http_app(settings: Settings):
         async def dispatch(self, request: Request, call_next):
             if not request.url.path.startswith(settings.mcp_path):
                 return await call_next(request)
-            if not settings.bearer_token:
+            if settings.bearer_token is None:
                 return await call_next(request)
             if request.method == "OPTIONS":
                 return await call_next(request)
             token = request.headers.get("authorization", "")
-            expected = f"Bearer {settings.bearer_token}"
+            expected = f"Bearer {settings.bearer_token.get_secret_value()}"
             if hmac.compare_digest(token, expected):
                 return await call_next(request)
             metadata_url = settings.external_auth_metadata_url or "/.well-known/oauth-protected-resource"
@@ -183,6 +183,6 @@ def create_http_app(settings: Settings):
         lifespan=lifespan,
     )
     app.add_middleware(OriginGuardMiddleware)
-    if settings.bearer_token:
+    if settings.bearer_token is not None:
         app.add_middleware(BearerAuthMiddleware)
     return app
