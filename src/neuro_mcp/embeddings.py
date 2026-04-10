@@ -16,7 +16,7 @@ class TfidfEmbedder:
 
     def fit(self, texts: Iterable[str]) -> None:
         corpus = list(texts)
-        self.vectorizer = TfidfVectorizer(
+        new_vectorizer = TfidfVectorizer(
             lowercase=True,
             ngram_range=(1, 2),
             max_features=32768,
@@ -24,9 +24,13 @@ class TfidfEmbedder:
             token_pattern=r"(?u)\b[A-Za-z0-9_./:-]{2,}\b",
         )
         if corpus:
-            self.doc_matrix = self.vectorizer.fit_transform(corpus)
+            new_matrix = new_vectorizer.fit_transform(corpus)
         else:
-            self.doc_matrix = None
+            new_matrix = None
+        # Atomically swap: concurrent transform() callers either see the old
+        # fitted vectorizer or the new one, never a half-built state.
+        self.vectorizer = new_vectorizer
+        self.doc_matrix = new_matrix
 
     def transform(self, texts: Iterable[str]):
         if self.vectorizer is None:

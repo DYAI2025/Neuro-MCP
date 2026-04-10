@@ -31,23 +31,26 @@ def test_concurrent_refresh_and_search_do_not_raise(svc: NeuroMCPService):
     errors: list[Exception] = []
 
     def do_refresh():
-        for _ in range(5):
+        for _ in range(20):
             try:
                 svc.refresh()
             except Exception as exc:
                 errors.append(exc)
-            time.sleep(0.01)
+            time.sleep(0.001)
 
     def do_search():
-        for _ in range(10):
+        for _ in range(50):
             try:
                 svc.search_brain("testing", top_k=3)
             except Exception as exc:
                 errors.append(exc)
-            time.sleep(0.005)
+            time.sleep(0.001)
 
     threads = [
         threading.Thread(target=do_refresh),
+        threading.Thread(target=do_refresh),
+        threading.Thread(target=do_search),
+        threading.Thread(target=do_search),
         threading.Thread(target=do_search),
         threading.Thread(target=do_search),
     ]

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import sqlite3
+import threading
 from pathlib import Path
 from typing import Iterable
 
@@ -33,21 +34,32 @@ class Repository:
     def __init__(self, db_path: str | Path) -> None:
         self.db_path = Path(db_path)
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
-        self._conn: sqlite3.Connection | None = None
+        self._local = threading.local()
+        self._all_connections: list[sqlite3.Connection] = []
+        self._all_connections_lock = threading.Lock()
         self._init()
 
     def _get_conn(self) -> sqlite3.Connection:
-        """Return the cached connection, creating it if needed."""
-        if self._conn is None:
-            self._conn = sqlite3.connect(str(self.db_path), check_same_thread=False)
-            self._conn.row_factory = sqlite3.Row
-        return self._conn
+        """Return the current thread's connection, creating it on first use."""
+        conn = getattr(self._local, "conn", None)
+        if conn is None:
+            conn = sqlite3.connect(str(self.db_path), check_same_thread=False)
+            conn.row_factory = sqlite3.Row
+            self._local.conn = conn
+            with self._all_connections_lock:
+                self._all_connections.append(conn)
+        return conn
 
     def close(self) -> None:
-        """Close the cached connection."""
-        if self._conn is not None:
-            self._conn.close()
-            self._conn = None
+        """Close all thread-local connections."""
+        with self._all_connections_lock:
+            for conn in self._all_connections:
+                try:
+                    conn.close()
+                except sqlite3.Error:
+                    pass
+            self._all_connections.clear()
+        self._local = threading.local()
 
     def _init(self) -> None:
         conn = self._get_conn()
