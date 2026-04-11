@@ -223,3 +223,40 @@ def test_symlink_outside_brain_root_is_skipped():
 
         # The escaped file should NOT have been enriched
         assert "_neuro_mcp_enriched" not in real_note.read_text()
+
+
+def test_enrichment_throughput_100_notes():
+    """Enrichment of 100 bare notes should complete in < 2 seconds.
+
+    This is a loose bound — the real purpose is to catch ~10x regressions,
+    not fine-grained performance tuning.
+    """
+    import time
+    with tempfile.TemporaryDirectory() as td:
+        tdp = Path(td)
+        brain = tdp / "brain" / "04-projekte"
+        brain.mkdir(parents=True)
+        for i in range(100):
+            (brain / f"note-{i:03d}.md").write_text(f"Body of note {i}\n")
+
+        settings = _settings(
+            tdp,
+            enable_auto_enrich_frontmatter=True,
+            folder_type_map={
+                "04-projekte": {"type": "note", "decay_class": "30d"},
+            },
+        )
+        svc = NeuroMCPService(settings)
+
+        start = time.perf_counter()
+        svc.refresh()
+        elapsed = time.perf_counter() - start
+
+        assert elapsed < 2.0, f"Enrichment of 100 notes took {elapsed:.2f}s"
+
+        # Verify all 100 were actually enriched
+        enriched_count = sum(
+            1 for p in brain.glob("*.md")
+            if "_neuro_mcp_enriched" in p.read_text()
+        )
+        assert enriched_count == 100
