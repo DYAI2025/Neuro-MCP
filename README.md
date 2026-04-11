@@ -166,6 +166,12 @@ This repository is production-oriented, but there are three intentional conserva
 
 The implementation targets the current official MCP Python SDK line. The core package stays importable without the optional MCP dependency so that indexing and audits can run in plain Python environments.
 
+## Ausführliche Systemdoku (DE)
+
+Eine ausführliche deutschsprachige Systemdokumentation (Idee, Funktionsweise, aktueller Reifegrad):
+
+- `docs/SYSTEMDOKU.de.md`
+
 ## License
 
 MIT
