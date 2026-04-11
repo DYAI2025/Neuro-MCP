@@ -95,6 +95,29 @@
 | TASK-multi-source-types | Add source type registry for PR descriptions, agent summaries | P2 | Todo | [REQ-F-multi-source-knowledge-ingestion](../1-spec/requirements/REQ-F-multi-source-knowledge-ingestion.md) | - | 2026-04-10 | |
 | TASK-multi-source-relation | Relate new knowledge to existing context, mark conflicts | P2 | Todo | [REQ-F-multi-source-knowledge-ingestion](../1-spec/requirements/REQ-F-multi-source-knowledge-ingestion.md) | TASK-multi-source-types | 2026-04-10 | |
 | TASK-should-have-tests | Test: recency, coherence, multi-source, conflict marking | P2 | Todo | - | TASK-coherence-check, TASK-multi-source-relation, TASK-evidence-graph-tests | 2026-04-10 | |
+| TASK-frontmatter-write-locking | Add file-level locking or atomic temp-file replace for writer.py mutations | P1 | Todo | [REQ-OPS-data-integrity-concurrency](../1-spec/requirements/REQ-OPS-data-integrity-concurrency.md) | - | 2026-04-10 | Workstream 7A |
+| TASK-storage-frontmatter-transaction-order | Define mutation ordering: storage update vs frontmatter write vs log write | P1 | Todo | [REQ-OPS-data-integrity-concurrency](../1-spec/requirements/REQ-OPS-data-integrity-concurrency.md) | - | 2026-04-10 | Workstream 7A |
+| TASK-concurrent-refresh-search-tests | Tests: refresh/search/reconcile/gc overlap without corruption | P1 | Todo | [REQ-OPS-data-integrity-concurrency](../1-spec/requirements/REQ-OPS-data-integrity-concurrency.md) | TASK-frontmatter-write-locking | 2026-04-10 | Workstream 7A |
+| TASK-watcher-debounce-backpressure | Add bounded event queue/backpressure policy for watch_forever | P1 | Todo | [REQ-OPS-data-integrity-concurrency](../1-spec/requirements/REQ-OPS-data-integrity-concurrency.md) | - | 2026-04-10 | Workstream 7A |
+| TASK-idempotent-state-transition-guards | Prevent duplicate labile/archive/promote transitions on repeated events | P1 | Todo | [REQ-OPS-data-integrity-concurrency](../1-spec/requirements/REQ-OPS-data-integrity-concurrency.md) | - | 2026-04-10 | Workstream 7A |
+| TASK-schema-versioning | Add schema_version tracking for storage backend | P1 | Todo | [REQ-OPS-migration-compatibility](../1-spec/requirements/REQ-OPS-migration-compatibility.md) | - | 2026-04-10 | Workstream 7B |
+| TASK-storage-migration-framework | Introduce lightweight migration runner for new tables/columns | P1 | Todo | [REQ-OPS-migration-compatibility](../1-spec/requirements/REQ-OPS-migration-compatibility.md) | TASK-schema-versioning | 2026-04-10 | Workstream 7B |
+| TASK-frontmatter-field-compat | Define compatibility policy for new fields: labile_since, source_type, supersedes, etc. | P1 | Todo | [REQ-OPS-migration-compatibility](../1-spec/requirements/REQ-OPS-migration-compatibility.md) | - | 2026-04-10 | Workstream 7B |
+| TASK-upgrade-fixture-tests | Tests: old repo state upgrades cleanly to new runtime | P1 | Todo | [REQ-OPS-migration-compatibility](../1-spec/requirements/REQ-OPS-migration-compatibility.md) | TASK-storage-migration-framework | 2026-04-10 | Workstream 7B |
+| TASK-migration-runbook | Add rollback/backup/migration docs for deploys | P0 | Todo | [REQ-OPS-migration-compatibility](../1-spec/requirements/REQ-OPS-migration-compatibility.md) | - | 2026-04-10 | Workstream 7B |
+| TASK-structured-logging | Standardize structured logs for refresh, reconcile, gc, watcher, ingest | P1 | Todo | [REQ-OPS-observability-runtime-metrics](../1-spec/requirements/REQ-OPS-observability-runtime-metrics.md) | - | 2026-04-10 | Workstream 7C |
+| TASK-runtime-metrics-counters | Add counters: stale_count, labile_count, open_recon_tx, gc_mutations, watcher_errors | P1 | Todo | [REQ-OPS-observability-runtime-metrics](../1-spec/requirements/REQ-OPS-observability-runtime-metrics.md) | - | 2026-04-10 | Workstream 7C |
+| TASK-latency-metrics | Capture durations for refresh/search/reconcile/bootstrap | P1 | Todo | [REQ-OPS-observability-runtime-metrics](../1-spec/requirements/REQ-OPS-observability-runtime-metrics.md) | - | 2026-04-10 | Workstream 7C |
+| TASK-digest-ops-section | Add operational summary to digest(): errors, pending reviews, recent mutations, queue pressure | P1 | Todo | [REQ-OPS-observability-runtime-metrics](../1-spec/requirements/REQ-OPS-observability-runtime-metrics.md) | TASK-runtime-metrics-counters | 2026-04-10 | Workstream 7C |
+| TASK-observability-tests | Tests: metrics emitted, degraded state visible, logs include correlation fields | P1 | Todo | [REQ-OPS-observability-runtime-metrics](../1-spec/requirements/REQ-OPS-observability-runtime-metrics.md) | TASK-structured-logging, TASK-runtime-metrics-counters | 2026-04-10 | Workstream 7C |
+| TASK-benchmark-fixtures | Create deterministic large-scale fixtures: 1k/10k/50k notes/chunks | P2 | Todo | [REQ-PERF-scale-validation](../1-spec/requirements/REQ-PERF-scale-validation.md) | - | 2026-04-10 | Workstream 7D |
+| TASK-refresh-search-benchmarks | Benchmark refresh/search/reconcile/bootstrap across fixture sizes | P2 | Todo | [REQ-PERF-scale-validation](../1-spec/requirements/REQ-PERF-scale-validation.md) | TASK-benchmark-fixtures | 2026-04-10 | Workstream 7D |
+| TASK-watcher-storm-tests | Simulate burst file changes and verify backlog recovery | P2 | Todo | [REQ-PERF-scale-validation](../1-spec/requirements/REQ-PERF-scale-validation.md) | TASK-watcher-debounce-backpressure | 2026-04-10 | Workstream 7D |
+| TASK-memory-footprint-report | Measure memory/storage footprint of indexes, tx tables, graph structures | P2 | Todo | [REQ-PERF-scale-validation](../1-spec/requirements/REQ-PERF-scale-validation.md) | TASK-benchmark-fixtures | 2026-04-10 | Workstream 7D |
+| TASK-performance-budget-doc | Define acceptable latency/error budgets per command/mode | P2 | Todo | [REQ-PERF-scale-validation](../1-spec/requirements/REQ-PERF-scale-validation.md) | TASK-refresh-search-benchmarks | 2026-04-10 | Workstream 7D |
+| TASK-release-checklist | Add release checklist covering migrations, tests, docs, benchmark delta, security review | P0 | Todo | [REQ-REL-release-engineering](../1-spec/requirements/REQ-REL-release-engineering.md) | - | 2026-04-10 | Workstream 7F |
+| TASK-fixture-regression-pack | Pin deterministic regression fixtures for all must-have workflows | P0 | Todo | [REQ-REL-release-engineering](../1-spec/requirements/REQ-REL-release-engineering.md) | - | 2026-04-10 | Workstream 7F |
+| TASK-fail-fast-config-lint | Add config validation/lint command for startup/deploy validation | P0 | Todo | [REQ-REL-release-engineering](../1-spec/requirements/REQ-REL-release-engineering.md) | - | 2026-04-10 | Workstream 7F |
 
 ### MCP Server
 
@@ -102,6 +125,13 @@
 |----|------|----------|--------|-----|--------------|---------|-------|
 | TASK-recon-mcp-tools | Expose approve_reconsolidation and explain_contradictions as MCP tools | P1 | Todo | [REQ-F-reconsolidation-transactions](../1-spec/requirements/REQ-F-reconsolidation-transactions.md) | TASK-recon-tx-tests | 2026-04-10 | |
 | TASK-bootstrap-mcp-tool | Expose context_bootstrap as MCP tool | P1 | Todo | [REQ-F-context-bootstrap-existing-projects](../1-spec/requirements/REQ-F-context-bootstrap-existing-projects.md) | TASK-context-bootstrap-tests | 2026-04-10 | |
+| TASK-health-expanded | Extend readyz/health with degraded-state indicators | P1 | Todo | [REQ-OPS-observability-runtime-metrics](../1-spec/requirements/REQ-OPS-observability-runtime-metrics.md) | - | 2026-04-10 | Workstream 7C |
+| TASK-auth-config-validation | Validate secure auth/origin settings at startup for remote mode | P1 | Todo | [REQ-SEC-remote-operation-hardening](../1-spec/requirements/REQ-SEC-remote-operation-hardening.md) | - | 2026-04-10 | Workstream 7E |
+| TASK-tool-audit-log | Audit-log MCP tool calls with actor/session/tool/result metadata | P1 | Todo | [REQ-SEC-remote-operation-hardening](../1-spec/requirements/REQ-SEC-remote-operation-hardening.md) | - | 2026-04-10 | Workstream 7E |
+| TASK-rate-limit-guardrails | Add optional per-endpoint/tool request throttling | P1 | Todo | [REQ-SEC-remote-operation-hardening](../1-spec/requirements/REQ-SEC-remote-operation-hardening.md) | - | 2026-04-10 | Workstream 7E |
+| TASK-sensitive-path-guard | Prevent unsafe path access outside configured workspace roots | P1 | Todo | [REQ-SEC-remote-operation-hardening](../1-spec/requirements/REQ-SEC-remote-operation-hardening.md) | - | 2026-04-10 | Workstream 7E |
+| TASK-deploy-reference-configs | Provide hardened reverse-proxy/deploy examples for local-only and remote use | P1 | Todo | [REQ-SEC-remote-operation-hardening](../1-spec/requirements/REQ-SEC-remote-operation-hardening.md) | - | 2026-04-10 | Workstream 7E |
+| TASK-security-smoke-tests | Tests: unsafe config rejected, workspace escape blocked, audit log created | P1 | Todo | [REQ-SEC-remote-operation-hardening](../1-spec/requirements/REQ-SEC-remote-operation-hardening.md) | TASK-auth-config-validation, TASK-sensitive-path-guard, TASK-tool-audit-log | 2026-04-10 | Workstream 7E |
 
 ### Deploy & Operations
 
@@ -114,6 +144,7 @@
 | TASK-phase-4-manual-testing | Update runbook with reconsolidation + MCP tool scenarios | P0 | Todo | - | TASK-recon-mcp-tools | 2026-04-10 | |
 | TASK-phase-5-manual-testing | Update runbook with bidirectional memory + bootstrap scenarios | P0 | Todo | - | TASK-bidirectional-tests, TASK-bootstrap-mcp-tool | 2026-04-10 | |
 | TASK-phase-6-manual-testing | Update runbook with evidence graph + coherence scenarios | P0 | Todo | - | TASK-should-have-tests | 2026-04-10 | |
+| TASK-production-readiness-runbook | Create 4-deploy/runbooks/production-readiness.md | P0 | Todo | [REQ-REL-release-engineering](../1-spec/requirements/REQ-REL-release-engineering.md) | TASK-migration-runbook, TASK-release-checklist | 2026-04-10 | Workstream 7F |
 
 ---
 
@@ -257,6 +288,70 @@
 10. TASK-should-have-tests
 11. TASK-phase-6-manual-testing
 
+### Phase 7: Production Readiness Addendum (cross-cutting)
+
+**Capabilities delivered:**
+- Atomic frontmatter writes safe under concurrent refresh/watcher/GC
+- Schema + frontmatter field compatibility across versions, upgrade-safe
+- Structured logs, runtime counters, latency metrics, expanded health signals
+- Deterministic benchmarks for 1k/10k/50k note fixtures, documented budgets
+- Remote MCP/HTTP hardening: auth validation, rate limits, audit log, workspace boundary
+- Release checklist + production-readiness runbook
+
+**Integration points (per the addendum author's recommendation):**
+- After Phase 1: concurrency hardening (50, 54), structured logging (60), release checklist (77), config lint (79)
+- Parallel to Phase 2: runtime metrics (61, 62, 64)
+- Before/during Phase 3: concurrent tests (52), watcher backpressure (53), health (63), watcher storm (68)
+- With Phase 4: schema versioning (55-59)
+- With Phase 5: benchmarks (66, 67, 69, 70)
+- Before remote MCP rollout: security hardening (71-76)
+- Before RC: production-readiness runbook (80)
+
+**Tasks (31 total across 6 workstreams 7A-7F):**
+
+7A Data Integrity & Concurrency:
+1. TASK-frontmatter-write-locking
+2. TASK-storage-frontmatter-transaction-order
+3. TASK-concurrent-refresh-search-tests
+4. TASK-watcher-debounce-backpressure
+5. TASK-idempotent-state-transition-guards
+
+7B Migration & Compatibility:
+6. TASK-schema-versioning
+7. TASK-storage-migration-framework
+8. TASK-frontmatter-field-compat
+9. TASK-upgrade-fixture-tests
+10. TASK-migration-runbook
+
+7C Observability:
+11. TASK-structured-logging
+12. TASK-runtime-metrics-counters
+13. TASK-latency-metrics
+14. TASK-health-expanded
+15. TASK-digest-ops-section
+16. TASK-observability-tests
+
+7D Performance & Scale:
+17. TASK-benchmark-fixtures
+18. TASK-refresh-search-benchmarks
+19. TASK-watcher-storm-tests
+20. TASK-memory-footprint-report
+21. TASK-performance-budget-doc
+
+7E Security & Remote Hardening:
+22. TASK-auth-config-validation
+23. TASK-tool-audit-log
+24. TASK-rate-limit-guardrails
+25. TASK-sensitive-path-guard
+26. TASK-deploy-reference-configs
+27. TASK-security-smoke-tests
+
+7F Release Engineering:
+28. TASK-release-checklist
+29. TASK-fixture-regression-pack
+30. TASK-fail-fast-config-lint
+31. TASK-production-readiness-runbook
+
 ---
 
 ## Summary
@@ -270,7 +365,8 @@
 | 4 | Reconsolidation Transactions | 9 | GOAL-reconsolidation-workflow (complete) |
 | 5 | Bidirectional Memory & Bootstrap | 9 | GOAL-bidirectional-memory, GOAL-context-bootstrap |
 | 6 | Should-Have Extensions | 11 | GOAL-evidence-graph, GOAL-coherent-narrative, GOAL-multi-source-ingestion |
-| **Total** | | **69 tasks** | **10/10 goals covered** |
+| 7 | Production Readiness Addendum | 31 | GOAL-production-readiness |
+| **Total** | | **100 tasks** | **11/11 goals covered** |
 
 ## How to Update
 

@@ -103,6 +103,7 @@ When an artifact (goal, user story, requirement) is no longer relevant:
 | [GOAL-multi-source-ingestion](goals/GOAL-multi-source-ingestion.md) | Should-have | Draft | Ingest and relate knowledge from multiple source families |
 | [GOAL-coherent-narrative](goals/GOAL-coherent-narrative.md) | Should-have | Draft | Persistent, continuously revalidated project narrative as single source of truth |
 | [GOAL-bidirectional-memory](goals/GOAL-bidirectional-memory.md) | Must-have | Draft | AI sessions write findings back as notes; code changes auto-reconcile brain notes |
+| [GOAL-production-readiness](goals/GOAL-production-readiness.md) | Should-have | Draft | Cross-cutting hardening: concurrency, migrations, observability, scale, remote hardening, release |
 
 ---
 
@@ -150,6 +151,12 @@ When an artifact (goal, user story, requirement) is no longer relevant:
 | [REQ-F-auto-linked-paths](requirements/REQ-F-auto-linked-paths.md) | Functional | Must-have | Draft | Scan notes for code references and write to linked_paths frontmatter |
 | [REQ-F-cron-analyze](requirements/REQ-F-cron-analyze.md) | Functional | Should-have | Draft | CLI cron-analyze: reconcile + interference + digest in one pass |
 | [REQ-OBS-pipeline-metrics](requirements/REQ-OBS-pipeline-metrics.md) | Observability | Should-have | Draft | Per-stage watcher pipeline metrics surfaced in digest and brain_status |
+| [REQ-OPS-data-integrity-concurrency](requirements/REQ-OPS-data-integrity-concurrency.md) | Operations | Must-have | Draft | Atomic frontmatter writes and safe mutations under concurrent refresh/watcher/GC |
+| [REQ-OPS-migration-compatibility](requirements/REQ-OPS-migration-compatibility.md) | Operations | Must-have | Draft | Upgrade-safe schema and frontmatter field migrations from older versions |
+| [REQ-OPS-observability-runtime-metrics](requirements/REQ-OPS-observability-runtime-metrics.md) | Operations | Must-have | Draft | Structured logs, counters, latency metrics, expanded health for core operations |
+| [REQ-PERF-scale-validation](requirements/REQ-PERF-scale-validation.md) | Performance | Should-have | Draft | Reproducible benchmarks for 1k/10k/50k vaults with documented budgets |
+| [REQ-SEC-remote-operation-hardening](requirements/REQ-SEC-remote-operation-hardening.md) | Security | Must-have | Draft | Auth validation, audit log, rate limits, workspace boundary for remote MCP |
+| [REQ-REL-release-engineering](requirements/REQ-REL-release-engineering.md) | Release | Should-have | Draft | Release checklist, regression fixtures, config lint, production-readiness runbook |
 
 ---
 
