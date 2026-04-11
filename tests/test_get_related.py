@@ -13,7 +13,7 @@ def _vault(tmp_path: Path) -> Path:
     (arch / "system-overview.md").write_text(
         "---\ntitle: System Overview\ntype: architecture-doc\ndecay_class: 90d\n"
         "source_precision: 0.9\nlast_verified: 2026-04-10\n---\n\n"
-        "# System Overview\n\nThe app uses RingStory as central bridge.\n"
+        "# System Overview\n\nThe app uses a central bridge module.\n"
     )
     (arch / "fusion-ring.md").write_text(
         "---\ntitle: Fusion Ring Concept\ntype: architecture-doc\ndecay_class: 90d\n"

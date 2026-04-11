@@ -168,9 +168,9 @@ watch_debounce_seconds: 5.0
 Create one config file per project:
 
 ```
-config-bazodiac.yaml      → Bazodiac-WebApp/Astro-Noctum
-config-deepagent.yaml     → Projects/DeepAgent
-config-flashdoc.yaml      → Projects/FlashDoc
+config-project-a.yaml    → /path/to/project-a
+config-project-b.yaml    → /path/to/project-b
+config-project-c.yaml    → /path/to/project-c
 ```
 
 Each gets its own `data_dir` so the indices don't collide.
@@ -583,7 +583,7 @@ If the server is already running at `http://127.0.0.1:8766`:
 ```json
 {
   "mcpServers": {
-    "neuro-mcp-bazodiac": {
+    "neuro-mcp": {
       "url": "http://127.0.0.1:8766/mcp"
     }
   }
@@ -595,10 +595,10 @@ If the server is already running at `http://127.0.0.1:8766`:
 ```json
 {
   "mcpServers": {
-    "neuro-bazodiac": {
+    "neuro-project-a": {
       "url": "http://127.0.0.1:8766/mcp"
     },
-    "neuro-deepagent": {
+    "neuro-project-b": {
       "url": "http://127.0.0.1:8767/mcp"
     }
   }
@@ -612,16 +612,16 @@ Each project runs on its own port with its own config and data_dir.
 ## Multi-Project Setup
 
 ```bash
-# Project 1 — Bazodiac
-neuro-mcp --config config-bazodiac.yaml serve \
+# Example project 1
+neuro-mcp --config config-project-a.yaml serve \
   --transport streamable-http --port 8766 &
 
-# Project 2 — DeepAgent
-neuro-mcp --config config-deepagent.yaml serve \
+# Example project 2
+neuro-mcp --config config-project-b.yaml serve \
   --transport streamable-http --port 8767 &
 
-# Project 3 — FlashDoc
-neuro-mcp --config config-flashdoc.yaml serve \
+# Example project 3
+neuro-mcp --config config-project-c.yaml serve \
   --transport streamable-http --port 8768 &
 ```
 
@@ -932,5 +932,5 @@ Each project needs its own port. Use `bind_port` in the config or `--port` on th
 curl http://127.0.0.1:8766/healthz
 
 # Status
-neuro-mcp --config config-bazodiac.yaml status
+neuro-mcp --config config.yaml status
 ```

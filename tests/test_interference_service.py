@@ -13,12 +13,12 @@ def _vault_with_overlap(tmp_path: Path) -> Path:
     (arch / "overview-v1.md").write_text(
         "---\ntitle: System Overview V1\ntype: architecture-doc\ndecay_class: 90d\n"
         "source_precision: 0.9\nlast_verified: 2026-04-10\n---\n\n"
-        "# System Overview V1\n\nBazodiac uses RingStory as the central bridge object.\n"
+        "# System Overview V1\n\nThe application uses a central bridge module.\n"
     )
     (arch / "overview-v2.md").write_text(
         "---\ntitle: System Overview V2\ntype: architecture-doc\ndecay_class: 90d\n"
         "source_precision: 0.85\nlast_verified: 2026-04-10\n---\n\n"
-        "# System Overview V2\n\nBazodiac uses RingStory as the central bridge object for profiles.\n"
+        "# System Overview V2\n\nThe application uses a central bridge module for profiles.\n"
     )
     return brain
 

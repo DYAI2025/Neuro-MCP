@@ -21,7 +21,7 @@ def _create_sample_vault(tmp_path: Path) -> Path:
         "tags: [architecture]\n"
         "---\n\n"
         "# System Overview\n\n"
-        "Bazodiac uses RingStory as the central bridge.\n\n"
+        "The application uses a central bridge module.\n\n"
         "## Components\n\n"
         "Frontend: Next.js, Backend: Python\n"
     )
@@ -39,7 +39,7 @@ def test_get_note_returns_content(tmp_path: Path):
     result = svc.get_note("10-architecture/system-overview.md")
     assert result["found"] is True
     assert result["title"] == "System Overview"
-    assert "RingStory" in result["content"]
+    assert "central bridge" in result["content"]
     assert result["metadata"]["decay_class"] == "90d"
     assert result["metadata"]["freshness"] is not None
 

@@ -14,16 +14,16 @@ from neuro_mcp.synaptic_tagging import evaluate_promotions
 def test_promote_inbox_with_code_correlation():
     note = NoteMetadata(
         note_id="n1",
-        title="RingStory Idea",
+        title="Bridge Module Idea",
         path="/brain/80-inbox/idea.md",
         note_type="inbox",
         decay_class="7d",
         status=NoteStatus.ACTIVE,
         created=datetime.now(UTC) - timedelta(hours=12),
-        linked_paths=["src/ring_story.py"],
+        linked_paths=["src/bridge_module.py"],
         source_precision=0.4,
     )
-    changed_files = {"src/ring_story.py", "src/other.py"}
+    changed_files = {"src/bridge_module.py", "src/other.py"}
 
     promotions = evaluate_promotions(
         notes={"n1": note},
@@ -44,12 +44,12 @@ def test_no_promote_old_inbox():
         decay_class="7d",
         status=NoteStatus.ACTIVE,
         created=datetime.now(UTC) - timedelta(hours=72),
-        linked_paths=["src/ring_story.py"],
+        linked_paths=["src/bridge_module.py"],
         source_precision=0.4,
     )
     promotions = evaluate_promotions(
         notes={"n2": note},
-        changed_files={"src/ring_story.py"},
+        changed_files={"src/bridge_module.py"},
         stc_window_hours=48,
     )
     assert len(promotions) == 0
@@ -64,12 +64,12 @@ def test_no_promote_non_inbox():
         decay_class="90d",
         status=NoteStatus.ACTIVE,
         created=datetime.now(UTC) - timedelta(hours=1),
-        linked_paths=["src/ring_story.py"],
+        linked_paths=["src/bridge_module.py"],
         source_precision=0.9,
     )
     promotions = evaluate_promotions(
         notes={"n3": note},
-        changed_files={"src/ring_story.py"},
+        changed_files={"src/bridge_module.py"},
         stc_window_hours=48,
     )
     assert len(promotions) == 0

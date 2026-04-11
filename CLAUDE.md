@@ -25,7 +25,7 @@ uv run neuro-mcp --config config-self.yaml index
 
 Self-server runs on port 8767: `uv run neuro-mcp --config config-self.yaml serve --transport streamable-http --port 8767`
 
-External brain vault (Obsidian) is still available via config-bazodiac.yaml (port 8766).
+Create your own `config-<name>.yaml` (gitignored) for each external vault — see `config.example.yaml`.
 
 ## Installation
 

@@ -185,7 +185,7 @@ registerScenario(
     (runtime) => {
       const note = byId(runtime, "note-inbox");
       if (note) {
-        note.linkedPaths = ["src/components/RingStory.tsx"];
+        note.linkedPaths = ["src/components/ExampleComponent.tsx"];
         note.metadata.stc_overlap = true;
       }
       runtime.emit({ type: "synaptic.detect", message: "Code change overlap detected for inbox note." });

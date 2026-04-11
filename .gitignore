@@ -7,6 +7,14 @@ dist/
 build/
 .DS_Store
 .neuro_mcp/
+.neuro_mcp_*/
+
+# User-specific config files (keep config.example.yaml tracked, ignore personal configs)
+config-*.yaml
+!config.example.yaml
+
+# Local Claude homunculus session data (never commit — may contain project references)
+.claude/homunculus/
 *.sqlite3
 *.joblib
 report.json

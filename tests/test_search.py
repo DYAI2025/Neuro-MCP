@@ -25,16 +25,16 @@ def _make_doc(doc_id: str, content: str, title: str = "test", freshness: str = "
 
 def test_rank_documents_hybrid_returns_sorted():
     docs = [
-        _make_doc("a", "RingStory is the central bridge for personality data"),
+        _make_doc("a", "CentralBridge is the main bridge module for profile data"),
         _make_doc("b", "Database migration scripts for PostgreSQL"),
-        _make_doc("c", "Frontend component for displaying zodiac charts"),
+        _make_doc("c", "Frontend component for displaying charts"),
     ]
     tfidf = TfidfEmbedder(model_path="/tmp/test_search_tfidf.joblib")
     hybrid = HybridEmbedder(tfidf_embedder=tfidf, model_name=None)
     hybrid.fit([d.content for d in docs])
 
     results = rank_documents_hybrid(
-        query="RingStory bridge",
+        query="CentralBridge module",
         documents=docs,
         hybrid_embedder=hybrid,
         top_k=3,

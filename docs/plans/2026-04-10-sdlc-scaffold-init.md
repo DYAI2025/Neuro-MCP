@@ -47,7 +47,7 @@ cp -r /tmp/ai-scrum-scaffold/ai-scrum-scaffold-main/.claude/skills/SDLC-* .claud
 
 **Step 2: Remove scaffold example artifacts (keep templates only)**
 
-Remove the example requirements, goals, constraints, and user stories that are specific to the scaffold's demo project (Bazodiac/BaZi):
+Remove the example requirements, goals, constraints, and user stories that are specific to the scaffold's demo project (example project):
 
 ```bash
 # Remove example spec artifacts (keep _template.md files)
@@ -891,7 +891,7 @@ Project management via ai-scrum-scaffold:
 
 ```bash
 cd /Users/benjaminpoersch/Obsidian_new/neuro_mcp/neuro_mcp_server_clean
-uv run neuro-mcp --config config-bazodiac.yaml index
+uv run neuro-mcp --config config-self.yaml index
 ```
 
 **Step 4: Commit the SDLC scaffold**
@@ -925,7 +925,7 @@ Invoke `/SDLC-status` to see the project dashboard:
 **Step 3: Verify brain vault search returns updated context**
 
 ```bash
-uv run neuro-mcp --config config-bazodiac.yaml search-brain "NeuroMCP SDLC"
+uv run neuro-mcp --config config-self.yaml search-brain "NeuroMCP SDLC"
 ```
 
 Expected: The updated brain note appears with SDLC status.

@@ -35,7 +35,7 @@ See `docs/neuro_transfer.md`.
 
 ```yaml
 ---
-title: RingStory component
+title: Example component
 type: component
 status: active
 created: 2026-04-10
@@ -44,12 +44,11 @@ decay_class: 30d
 source_precision: 0.8
 source_type: codebase-analysis
 linked_paths:
-  - src/components/RingStory.tsx
+  - src/components/ExampleComponent.tsx
 claimed_dependencies:
   - react
 tags:
   - component
-  - ringstory
 ---
 ```
 
@@ -90,7 +89,7 @@ neuro-mcp --config config.example.yaml search-brain "tech stack"
 Search the code:
 
 ```bash
-neuro-mcp --config config.example.yaml search-code "RingStory component"
+neuro-mcp --config config.example.yaml search-code "example component"
 ```
 
 Reconcile both:

@@ -12,13 +12,13 @@ def test_hybrid_embedder_fit_and_score_tfidf_only():
     hybrid = HybridEmbedder(tfidf_embedder=tfidf, model_name=None)
 
     texts = [
-        "RingStory is the central bridge object",
+        "CentralBridge is the main bridge module",
         "Authentication uses Supabase Auth with JWT tokens",
         "The frontend is built with Next.js and shadcn/ui",
     ]
     hybrid.fit(texts)
 
-    tfidf_scores, semantic_scores = hybrid.score("RingStory bridge")
+    tfidf_scores, semantic_scores = hybrid.score("CentralBridge module")
     assert len(tfidf_scores) == 3
     assert len(semantic_scores) == 3
     assert np.allclose(semantic_scores, 0.0)
