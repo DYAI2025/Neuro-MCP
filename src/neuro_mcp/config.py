@@ -83,6 +83,7 @@ class Settings(BaseModel):
     enable_stc: bool = True
     enable_auto_reconcile: bool = False
     enable_auto_enrich_frontmatter: bool = False
+    enable_auto_wiki_links: bool = False
     folder_type_map: dict[str, FolderTypeRule] = Field(default_factory=dict)
     # For wiki-link generation (auto_wiki_links): lower = more links.
     # 0.8 is stricter than the TF-IDF literature default (~0.7) — we prefer

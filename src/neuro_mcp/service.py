@@ -159,12 +159,15 @@ class NeuroMCPService:
             self._loaded = True
 
             # Pipeline stages — order matters: enrich first (fills missing fields),
-            # then STC (may promote inbox → 30d), then labile (marks status based
-            # on linked_paths), then reconcile (read-only).
+            # then wiki_links (uses enriched notes + fresh TF-IDF matrix), then STC
+            # (may promote inbox → 30d), then labile (marks status based on
+            # linked_paths), then reconcile (read-only).
             # Each stage is isolated so one failure does not block others.
             self._pipeline_stages = []
             self._run_pipeline_stage("enrich_frontmatter", self._run_auto_frontmatter_enrich,
                                      enabled=self.settings.enable_auto_enrich_frontmatter)
+            self._run_pipeline_stage("wiki_links", self._run_auto_wiki_links,
+                                     enabled=self.settings.enable_auto_wiki_links)
             self._run_pipeline_stage("stc", self._run_stc_promotions,
                                      enabled=self.settings.enable_stc)
             self._run_pipeline_stage("labile", self._check_labile_linked_paths,
@@ -187,6 +190,43 @@ class NeuroMCPService:
             result.error_count = 1
         result.duration_ms = (time.perf_counter() - start) * 1000
         self._pipeline_stages.append(result)
+
+    def _run_auto_wiki_links(self) -> list[str]:
+        """Compute pairwise similarity over brain notes and write bidirectional wiki-links.
+
+        Pipeline stage: runs after enrichment (so newly-enriched notes can
+        participate) and before STC. Passes the full chunk list (matching the
+        TF-IDF matrix shape) and post-filters candidates to collapse same-note
+        and duplicate pairs by owner_id.
+
+        Returns list of modified note paths.
+        """
+        from .wiki_links import compute_wiki_link_candidates, write_wiki_links
+
+        brain_docs = self.repo.all_documents(DocKind.BRAIN)
+        if len(brain_docs) < 2:
+            return []
+
+        raw_candidates = compute_wiki_link_candidates(
+            brain_docs,
+            embedder=self.brain_hybrid,
+            threshold=self.settings.auto_link_threshold,
+        )
+        # Collapse candidates by (min_id, max_id) and drop same-owner_id self-pairs
+        seen_pairs: set[tuple[str, str]] = set()
+        deduped = []
+        for cand in raw_candidates:
+            if cand.source_owner_id == cand.target_owner_id:
+                continue
+            key = tuple(sorted((cand.source_owner_id, cand.target_owner_id)))
+            if key in seen_pairs:
+                continue
+            seen_pairs.add(key)
+            deduped.append(cand)
+
+        if not deduped:
+            return []
+        return write_wiki_links(deduped, brain_root=self.settings.brain_root)
 
     def _run_auto_frontmatter_enrich(self) -> list[str]:
         """Fill in missing frontmatter fields for all brain notes based on folder_type_map.

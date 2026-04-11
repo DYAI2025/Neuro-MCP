@@ -102,22 +102,199 @@ jobs:
             uv run pytest tests/test_service_thread_safety.py -q --no-header || exit 1
           done
 
+  coverage:
+    name: Coverage Gate (core-engine)
+    runs-on: ubuntu-latest
+    needs: python-tests
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Install dependencies with coverage
+        run: |
+          uv sync --extra mcp --extra dev
+          uv pip install coverage
+
+      - name: Run tests with coverage
+        run: |
+          uv run coverage run -m pytest -q --no-header
+          uv run coverage report --fail-under=70 \
+            --include="src/neuro_mcp/*" \
+            --omit="src/neuro_mcp/server.py,src/neuro_mcp/cli.py"
+
+      - name: Generate coverage XML
+        if: always()
+        run: uv run coverage xml -o coverage.xml
+
+      - name: Upload coverage artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage.xml
+          retention-days: 14
+
+  security-scan:
+    name: Security Scan (Python)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Install dependencies and scanners
+        run: |
+          uv sync --extra mcp --extra dev
+          uv pip install bandit pip-audit
+
+      - name: Bandit SAST (src/)
+        run: uv run bandit -r src/neuro_mcp -ll --skip B101 -f txt
+
+      - name: pip-audit (dependency CVEs)
+        run: |
+          uv run pip-audit --strict --disable-pip || {
+            echo "::warning::pip-audit found vulnerabilities — review required"
+            exit 0
+          }
+
+  mvp-smoke-test:
+    name: MVP Smoke Test (enrichment + wiki-links)
+    runs-on: ubuntu-latest
+    needs: python-tests
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Install dependencies
+        run: uv sync --extra mcp --extra dev
+
+      - name: Run MVP-critical test suites
+        run: |
+          uv run pytest -v --no-header \
+            tests/test_auto_frontmatter_enrich.py \
+            tests/test_auto_frontmatter_pipeline.py \
+            tests/test_wiki_links_compute.py \
+            tests/test_wiki_links_write.py \
+            tests/test_wiki_links_pipeline.py \
+            tests/test_folder_type_map.py \
+            tests/test_auto_link_threshold.py \
+            tests/test_enrichment_marker.py
+
+      - name: End-to-end smoke (create vault, enrich, verify)
+        run: |
+          mkdir -p /tmp/smoke-brain/00-inbox /tmp/smoke-brain/04-projekte /tmp/smoke-code
+          echo "python async concurrency patterns for web services" > /tmp/smoke-brain/04-projekte/async-web.md
+          echo "python async concurrency patterns for apps" > /tmp/smoke-brain/04-projekte/async-apps.md
+          echo "italian pasta recipes with fresh tomatoes" > /tmp/smoke-brain/00-inbox/recipe.md
+
+          cat > /tmp/smoke-config.yaml <<EOF
+          brain_root: /tmp/smoke-brain
+          code_root: /tmp/smoke-code
+          data_dir: /tmp/smoke-data
+          enable_auto_enrich_frontmatter: true
+          enable_auto_wiki_links: true
+          auto_link_threshold: 0.3
+          folder_type_map:
+            "00-inbox":
+              type: inbox
+              decay_class: 7d
+            "04-projekte":
+              type: note
+              decay_class: 30d
+          EOF
+
+          uv run neuro-mcp --config /tmp/smoke-config.yaml index
+
+          echo "=== async-web.md after enrichment ==="
+          cat /tmp/smoke-brain/04-projekte/async-web.md
+
+          grep -q "_neuro_mcp_enriched: v1" /tmp/smoke-brain/04-projekte/async-web.md || {
+            echo "::error::Enrichment marker missing from async-web.md"
+            exit 1
+          }
+          grep -q "type: note" /tmp/smoke-brain/04-projekte/async-web.md || {
+            echo "::error::Folder type map not applied to async-web.md"
+            exit 1
+          }
+          grep -q "related_notes" /tmp/smoke-brain/04-projekte/async-web.md || {
+            echo "::error::Wiki-link writer did not populate related_notes"
+            exit 1
+          }
+          grep -q "type: inbox" /tmp/smoke-brain/00-inbox/recipe.md || {
+            echo "::error::Inbox folder type map not applied"
+            exit 1
+          }
+
+          # Verify enriched notes are still searchable — catches silent YAML corruption
+          SEARCH_OUT=$(uv run neuro-mcp --config /tmp/smoke-config.yaml search-brain "python async" 2>&1)
+          echo "$SEARCH_OUT" | grep -q "async-web" || {
+            echo "::error::search-brain did not return enriched note — possible frontmatter corruption"
+            echo "$SEARCH_OUT"
+            exit 1
+          }
+          echo "MVP smoke test passed"
+
   summary:
     name: Test Summary
     runs-on: ubuntu-latest
-    needs: [python-tests, visual-test-lab, thread-safety-stress]
+    needs:
+      - python-tests
+      - visual-test-lab
+      - thread-safety-stress
+      - coverage
+      - security-scan
+      - mvp-smoke-test
     if: always()
 
     steps:
-      - name: Check all jobs
+      - name: Check critical jobs
+        shell: bash
         run: |
-          echo "Python tests: ${{ needs.python-tests.result }}"
-          echo "Visual test lab: ${{ needs.visual-test-lab.result }}"
-          echo "Thread safety: ${{ needs.thread-safety-stress.result }}"
-          if [ "${{ needs.python-tests.result }}" != "success" ] || \
-             [ "${{ needs.visual-test-lab.result }}" != "success" ] || \
-             [ "${{ needs.thread-safety-stress.result }}" != "success" ]; then
-            echo "One or more test jobs failed"
-            exit 1
+          echo "Python tests:       ${{ needs.python-tests.result }}"
+          echo "Visual test lab:    ${{ needs.visual-test-lab.result }}"
+          echo "Thread safety:      ${{ needs.thread-safety-stress.result }}"
+          echo "Coverage:           ${{ needs.coverage.result }}"
+          echo "Security scan:      ${{ needs.security-scan.result }}"
+          echo "MVP smoke test:     ${{ needs.mvp-smoke-test.result }}"
+          CRITICAL=(python-tests visual-test-lab thread-safety-stress coverage mvp-smoke-test)
+          RESULTS=("${{ needs.python-tests.result }}" \
+                   "${{ needs.visual-test-lab.result }}" \
+                   "${{ needs.thread-safety-stress.result }}" \
+                   "${{ needs.coverage.result }}" \
+                   "${{ needs.mvp-smoke-test.result }}")
+          for r in "${RESULTS[@]}"; do
+            if [ "$r" != "success" ]; then
+              echo "::error::A critical job failed"
+              exit 1
+            fi
+          done
+          if [ "${{ needs.security-scan.result }}" != "success" ]; then
+            echo "::warning::Security scan reported issues — review but not blocking"
           fi
-          echo "All tests passed"
+          echo "All critical tests passed"
