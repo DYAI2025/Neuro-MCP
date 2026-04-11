@@ -81,6 +81,7 @@ class Settings(BaseModel):
     watch_debounce_seconds: float = 5.0
     enable_stc: bool = True
     enable_auto_reconcile: bool = False
+    enable_auto_enrich_frontmatter: bool = False
     folder_type_map: dict[str, FolderTypeRule] = Field(default_factory=dict)
 
     @model_validator(mode="after")
