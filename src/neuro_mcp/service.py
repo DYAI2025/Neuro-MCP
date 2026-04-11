@@ -158,10 +158,13 @@ class NeuroMCPService:
             # Mark loaded before pipeline stages — index is valid even if enrichment fails.
             self._loaded = True
 
-            # Pipeline stages — order matters: STC first (may promote inbox → 30d),
-            # then labile (marks status based on linked_paths), then reconcile (read-only).
+            # Pipeline stages — order matters: enrich first (fills missing fields),
+            # then STC (may promote inbox → 30d), then labile (marks status based
+            # on linked_paths), then reconcile (read-only).
             # Each stage is isolated so one failure does not block others.
             self._pipeline_stages = []
+            self._run_pipeline_stage("enrich_frontmatter", self._run_auto_frontmatter_enrich,
+                                     enabled=self.settings.enable_auto_enrich_frontmatter)
             self._run_pipeline_stage("stc", self._run_stc_promotions,
                                      enabled=self.settings.enable_stc)
             self._run_pipeline_stage("labile", self._check_labile_linked_paths,
@@ -184,6 +187,31 @@ class NeuroMCPService:
             result.error_count = 1
         result.duration_ms = (time.perf_counter() - start) * 1000
         self._pipeline_stages.append(result)
+
+    def _run_auto_frontmatter_enrich(self) -> list[str]:
+        """Fill in missing frontmatter fields for all brain notes based on folder_type_map.
+
+        Returns the list of note paths that were modified. Does not mutate
+        body content (DEC-two-stage-mutations).
+        """
+        from .frontmatter import enrich_note_frontmatter
+
+        enriched: list[str] = []
+        brain_root = self.settings.brain_root.resolve()
+        for note in self.notes.values():
+            note_path = Path(note.path)
+            if not note_path.exists():
+                continue
+            try:
+                relative = note_path.resolve().relative_to(brain_root)
+            except ValueError:
+                logger.debug("Skipping note outside brain_root: %s", note_path)
+                continue
+            rule = self.settings.resolve_folder_type(relative)
+            if enrich_note_frontmatter(note_path, rule=rule):
+                enriched.append(str(note_path))
+                logger.info("Enriched frontmatter: %s", relative)
+        return enriched
 
     def _run_auto_reconcile(self) -> None:
         """Trigger reconcile on notes whose linked_paths overlap with recently changed files."""
