@@ -193,3 +193,33 @@ def test_stc_sees_enriched_inbox_notes():
         stc_stage = next((s for s in digest.pipeline_stages if s.stage == "stc"), None)
         assert stc_stage is not None
         assert stc_stage.error_count == 0
+
+
+def test_symlink_outside_brain_root_is_skipped():
+    """Notes resolving outside brain_root (via symlink) are skipped defensively."""
+    import os
+    with tempfile.TemporaryDirectory() as td:
+        tdp = Path(td)
+        brain = tdp / "brain"
+        outside = tdp / "outside"
+        brain.mkdir()
+        outside.mkdir()
+
+        # Real file outside brain_root
+        real_note = outside / "escaped.md"
+        real_note.write_text("Escaped content.\n")
+
+        # Symlink inside brain_root pointing at it
+        symlink_note = brain / "via-symlink.md"
+        try:
+            os.symlink(real_note, symlink_note)
+        except OSError:
+            import pytest
+            pytest.skip("Symlinks not supported on this filesystem")
+
+        settings = _settings(tdp, enable_auto_enrich_frontmatter=True)
+        svc = NeuroMCPService(settings)
+        svc.refresh()  # must not raise
+
+        # The escaped file should NOT have been enriched
+        assert "_neuro_mcp_enriched" not in real_note.read_text()
