@@ -90,6 +90,10 @@ class Settings(BaseModel):
     # fewer but more confident links. Must stay below similarity_threshold (0.85)
     # so wiki-links activate before interference/near-duplicate flagging.
     auto_link_threshold: float = Field(default=0.8, ge=0.0, le=1.0)
+    # Freeze-on-inactivity: decay only ticks while the system is actively
+    # used. When enabled, offline periods are subtracted from the clock so
+    # notes don't age during downtime. Default: True.
+    freeze_on_inactivity: bool = True
 
     @model_validator(mode="after")
     def _check_search_weights(self) -> "Settings":
@@ -137,4 +141,13 @@ class Settings(BaseModel):
         else:
             import yaml
             payload = yaml.safe_load(raw)
-        return cls(**payload)
+
+        # Extract the agents block before Pydantic validation (it's not
+        # a Pydantic field — it's passed through as _agents_raw for the
+        # agent dispatcher to consume).
+        agents_raw = payload.pop("agents", None)
+
+        instance = cls(**payload)
+        if agents_raw:
+            object.__setattr__(instance, "_agents_raw", agents_raw)
+        return instance

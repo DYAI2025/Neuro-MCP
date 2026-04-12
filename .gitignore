@@ -21,3 +21,5 @@ config-*.yaml
 report.json
 .pytest_cache/
 *.egg
+_test/
+1-spec/1-spec/

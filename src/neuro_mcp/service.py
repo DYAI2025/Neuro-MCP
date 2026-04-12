@@ -16,6 +16,7 @@ except ImportError:
 
 from .codebase import scan_code_documents
 from .config import Settings
+from .freshness import FreezeTracker, set_freeze_tracker
 from .embeddings import TfidfEmbedder
 from .gc import build_gc_report
 from .git_utils import changed_files_since, detect_mode
@@ -66,11 +67,80 @@ class NeuroMCPService:
         self._pipeline_stages: list[PipelineStageResult] = []
         self._loaded = False
         self._refresh_lock = threading.Lock()
+
+        # Freeze-on-inactivity: initialise tracker and register as module singleton
+        self._freeze_tracker = FreezeTracker(
+            data_dir=self.data_dir,
+            enabled=settings.freeze_on_inactivity,
+        )
+        set_freeze_tracker(self._freeze_tracker)
+        if self._freeze_tracker.enabled and self._freeze_tracker.offline_offset.total_seconds() > 0:
+            hours = self._freeze_tracker.offline_offset.total_seconds() / 3600
+            logger.info(
+                "Freeze-on-inactivity: %.1f hours of offline time accumulated — "
+                "decay clock shifted forward accordingly",
+                hours,
+            )
+
+        # Agent dispatcher: autonomous agents for brain maintenance
+        self._agent_dispatcher = None
+        self._init_agents()
+
         self._check_data_dir_permissions()
         if self.settings.enable_auto_reconcile:
             logger.info("Auto-reconcile pipeline stage enabled")
         if not self.settings.enable_stc:
             logger.info("STC pipeline stage disabled")
+
+    def _init_agents(self) -> None:
+        """Initialize the LLM-agnostic agent dispatcher.
+
+        Reads agent definitions from .brain/agents/*.md and configures
+        the LLM provider from the agents: block in config YAML.
+        """
+        agents_raw = getattr(self.settings, "_agents_raw", None)
+        if agents_raw is None:
+            return
+
+        try:
+            from .agents.llm_providers import LLMConfig
+            from .agents.dispatcher import AgentDispatcher, DispatcherConfig
+
+            llm_cfg = LLMConfig(
+                provider=agents_raw.get("llm_provider", "anthropic"),
+                model=agents_raw.get("llm_model", "claude-sonnet-4-20250514"),
+                api_key=agents_raw.get("llm_api_key"),
+                api_key_env=agents_raw.get("llm_api_key_env", "ANTHROPIC_API_KEY"),
+                base_url=agents_raw.get("llm_base_url"),
+                max_tokens=agents_raw.get("llm_max_tokens", 1024),
+                temperature=agents_raw.get("llm_temperature", 0.0),
+            )
+            dispatcher_cfg = DispatcherConfig(
+                intake_enabled=agents_raw.get("intake", {}).get("enabled", True),
+                verify_enabled=agents_raw.get("verify", {}).get("enabled", True),
+                reconcile_enabled=agents_raw.get("reconcile", {}).get("enabled", True),
+                gc_enabled=agents_raw.get("gc", {}).get("enabled", True),
+                synthesis_enabled=agents_raw.get("synthesis", {}).get("enabled", True),
+                auto_move_to_folder=agents_raw.get("intake", {}).get("auto_move_to_folder", True),
+            )
+            self._agent_dispatcher = AgentDispatcher(
+                brain_root=self.settings.brain_root,
+                llm_config=llm_cfg,
+                dispatcher_config=dispatcher_cfg,
+                service=self,
+            )
+            logger.info(
+                "Agent dispatcher initialized (provider=%s, model=%s): "
+                "intake=%s verify=%s reconcile=%s",
+                llm_cfg.provider, llm_cfg.model,
+                dispatcher_cfg.intake_enabled,
+                dispatcher_cfg.verify_enabled,
+                dispatcher_cfg.reconcile_enabled,
+            )
+        except ImportError as e:
+            logger.warning("Agents not available (missing dependency): %s", e)
+        except Exception:
+            logger.exception("Failed to initialize agent dispatcher")
 
     def _check_data_dir_permissions(self) -> None:
         """Warn if data_dir is world-writable — joblib uses pickle, unsafe if writable by others."""
@@ -295,6 +365,8 @@ class NeuroMCPService:
     def _ensure_loaded(self) -> None:
         if not self._loaded:
             self.load()
+        # Record active usage for freeze-on-inactivity (debounced internally)
+        self._freeze_tracker.heartbeat()
 
     def current_mode(self) -> Mode:
         change_set = detect_mode(self.settings.code_root, threshold=self.settings.phasic_change_threshold)
@@ -540,6 +612,15 @@ class NeuroMCPService:
         if mode == Mode.TONIC:
             recs.append("Tonic mode: major code changes detected — run full reconcile.")
 
+        freeze_info = {}
+        if self._freeze_tracker.enabled:
+            offset_s = self._freeze_tracker.offline_offset.total_seconds()
+            freeze_info = {
+                "freeze_on_inactivity": True,
+                "offline_hours_accumulated": round(offset_s / 3600, 1),
+                "effective_clock_shift": f"-{round(offset_s / 86400, 1)}d",
+            }
+
         return {
             "total_notes": len(self.notes),
             "by_type": by_type,
@@ -548,6 +629,7 @@ class NeuroMCPService:
             "mode": mode.value,
             "has_semantic": self.brain_hybrid.has_semantic,
             "recommendations": recs,
+            **freeze_info,
         }
 
     def check_interference(self) -> dict:
