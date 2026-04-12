@@ -10,6 +10,7 @@ build/
 .neuro_mcp_*/
 
 # User-specific config files (keep config.example.yaml tracked, ignore personal configs)
+config.yaml
 config-*.yaml
 !config.example.yaml
 

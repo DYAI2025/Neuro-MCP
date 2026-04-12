@@ -102,6 +102,33 @@ jobs:
             uv run pytest tests/test_service_thread_safety.py -q --no-header || exit 1
           done
 
+  privacy-guard:
+    name: Privacy Guard (leaked names)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Scan tracked files for leaked private project names
+        shell: bash
+        run: |
+          # Regression guard: prevent private project pseudonyms from being
+          # reintroduced after the 2026-04-11 anonymization pass. Targets
+          # project codenames only — author's own name is not a leak.
+          PATTERNS='bazodiac|astro-noctum|deepagent|flashdoc|ringstory'
+          # Exclude the workflow file itself (it contains the patterns as literals).
+          HITS=$(git ls-files -z \
+            | xargs -0 grep -lE "$PATTERNS" -i 2>/dev/null \
+            | grep -v '^.github/workflows/test.yml$' \
+            || true)
+          if [ -n "$HITS" ]; then
+            echo "::error::Leaked project pseudonyms found in tracked files:"
+            echo "$HITS"
+            exit 1
+          fi
+          echo "No leaked project pseudonyms in tracked files"
+
   coverage:
     name: Coverage Gate (core-engine)
     runs-on: ubuntu-latest
@@ -270,6 +297,7 @@ jobs:
       - coverage
       - security-scan
       - mvp-smoke-test
+      - privacy-guard
     if: always()
 
     steps:
@@ -282,12 +310,14 @@ jobs:
           echo "Coverage:           ${{ needs.coverage.result }}"
           echo "Security scan:      ${{ needs.security-scan.result }}"
           echo "MVP smoke test:     ${{ needs.mvp-smoke-test.result }}"
-          CRITICAL=(python-tests visual-test-lab thread-safety-stress coverage mvp-smoke-test)
+          echo "Privacy guard:      ${{ needs.privacy-guard.result }}"
+          CRITICAL=(python-tests visual-test-lab thread-safety-stress coverage mvp-smoke-test privacy-guard)
           RESULTS=("${{ needs.python-tests.result }}" \
                    "${{ needs.visual-test-lab.result }}" \
                    "${{ needs.thread-safety-stress.result }}" \
                    "${{ needs.coverage.result }}" \
-                   "${{ needs.mvp-smoke-test.result }}")
+                   "${{ needs.mvp-smoke-test.result }}" \
+                   "${{ needs.privacy-guard.result }}")
           for r in "${RESULTS[@]}"; do
             if [ "$r" != "success" ]; then
               echo "::error::A critical job failed"
